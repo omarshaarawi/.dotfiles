@@ -20,8 +20,8 @@ git clone git@github.com/omarshaarawi/.dotfiles.git
 cd dotfiles
 ```
 
-then use GNU stow to create symlinks
+then use the install script to setup the symlinks
 
 ```
-stow .
+./install_scrips.sh
 ```
