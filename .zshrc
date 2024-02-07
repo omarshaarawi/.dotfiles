@@ -1,7 +1,6 @@
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:/usr/local/go/bin"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:/usr/local/go/bin:$HOME/.scripts"
 
 export ZSH=/Users/Shaarawi/.oh-my-zsh
-export OPENAI_API_KEY=$(op item get 'OpenAI Key' --field credential)
 export DEFAULT_USER="$(whoami)"
 export EDITOR="vim"
 export ZSH_THEME="robbyrussell"
