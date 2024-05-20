@@ -8,10 +8,12 @@ if wezterm.config_builder then config = wezterm.config_builder() end
 
 -- Settings
 
-config.color_scheme = 'Gruvbox Material (Gogh)'
+config.color_scheme = 'Tokyo Night'
 config.font = wezterm.font_with_fallback({
-    { family = "Monaspace Argon" },
+    { family = "Berkeley Mono" },
 })
+config.font_size = 12.0
+
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
 config.scrollback_lines = 3000
