@@ -1,18 +1,24 @@
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:/usr/local/go/bin:$HOME/.scripts"
+# Path
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/go/bin:/usr/local/go/bin:$HOME/.scripts:/opt/homebrew/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/homebrew/sbin"
 
-export ZSH=/Users/Shaarawi/.oh-my-zsh
-export DEFAULT_USER="$(whoami)"
-export EDITOR="vim"
+# Oh My Zsh
+export ZSH="$HOME/.oh-my-zsh"
 export ZSH_THEME="robbyrussell"
+
+# User
+export DEFAULT_USER="$(whoami)"
+
+# Editor
+export EDITOR="vim"
+
+# Colors
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
+
+# GitHub
 export GITHUB_USERNAME="omarshaarawi"
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/graalvm-ce-java17-21.3.0/Contents/Home"
-export PROG=urfave
-#export GOROOT=/usr/local/go
-#export GOPATH=$HOME/go
 
-
+# Aliases
 alias ez='vim ~/.zshrc'
 alias sz='source ~/.zshrc'
 alias vim=nvim
@@ -20,8 +26,8 @@ alias vi=nvim
 alias mv='mv -i'
 alias rm='rm -I'
 alias python=/usr/local/bin/python3
-alias gfp="git commit --amend --no-edit && git push --force-with-lease"
 
+# Plugins
 plugins=(
   git
   zsh-autosuggestions
@@ -29,29 +35,30 @@ plugins=(
   z
 )
 
-
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-declare -x -A configs
-configs=(
-    git "$HOME/.config/git/config"
-    nvim "$HOME/.config/nvim/lua/shaarawi/packer.lua"
-    wezterm "$HOME/.wezterm.lua"
-    zsh "$HOME/.zshrc"
+# Syntax Highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-    )
+# Config Aliases
+configs=(
+  git:"$HOME/.config/git/config"
+  nvim:"$HOME/.config/nvim/lua/shaarawi/packer.lua"
+  wezterm:"$HOME/.wezterm.lua"
+  zsh:"$HOME/.zshrc"
+)
+
 for key value in ${(kv)configs}; do
-    if [[ $key == "zsh" ]]
-        then
-            alias ${key}config="nvim $value && source $value && echo
-$configs[zsh] has been sourced"
-     else
-        alias ${key}config="nvim $value"
-    fi
+  case $key in
+    zsh)
+      alias ${key}config="nvim $value && sz && echo '$value has been sourced'"
+      ;;
+    *)
+      alias ${key}config="nvim $value"
+      ;;
+  esac
 done
 
-
+# FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-

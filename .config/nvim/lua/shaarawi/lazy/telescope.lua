@@ -10,28 +10,24 @@ return {
         cond = function()
             return vim.fn.executable 'make' == 1
         end
-    } },
+        }
+    },
+
     config = function()
         local telescope = require('telescope')
         local builtin = require("telescope.builtin")
         local themes = require("telescope.themes")
-        local trouble = require("trouble.providers.telescope")
-
-        pcall(telescope.load_extension, 'fzf')
+        local trouble = require("trouble.sources.telescope")
 
         telescope.setup({
             defaults = {
                 mappings = {
-                    i = {
-                        ["<c-t>"] = trouble.open_with_trouble
-                    },
-                    n = {
-                        ["<c-t>"] = trouble.open_with_trouble
-                    }
-                }
+                    i = { ["<C-t>"] = trouble.open },
+                    n = { ["<C-t>"] = trouble.open },
+                },
             },
             extensions = {
-                ["ui-select"] = { themes.get_dropdown {} }
+                ["ui-select"] = { themes.get_dropdown {} },
             }
         })
 
@@ -43,7 +39,7 @@ return {
             builtin.grep_string({ search = vim.fn.input("Grep > ") });
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
-        vim.keymap.set("n", "<leader>ff", require('telescope.builtin').find_files, {})
+        vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
         vim.keymap.set('n', '<leader>pws', function()
             local word = vim.fn.expand("<cword>")
             builtin.grep_string({ search = word })
