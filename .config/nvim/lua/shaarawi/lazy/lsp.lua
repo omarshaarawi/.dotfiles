@@ -15,7 +15,7 @@ return {
     config = function()
         local cmp = require("cmp")
         local cmp_lsp = require("cmp_nvim_lsp")
-        local luasnip = require("luasnip")
+        -- local luasnip = require("luasnip")
         local capabilities = vim.tbl_deep_extend(
             "force",
             {},
@@ -33,7 +33,6 @@ return {
                 function(server_name)
                     require("lspconfig")[server_name].setup({
                         capabilities = capabilities,
-                        --                        on_attach = require("lazy.lsp_on_attach").on_attach,
 
                     })
                 end,
@@ -63,15 +62,15 @@ return {
                 end,
             },
             mapping = cmp.mapping.preset.insert({
-                ['<Tab>'] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_next_item()
-                    elseif luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
-                    else
-                        fallback()
-                    end
-                end, { 'i', 's' }),
+                -- ['<Tab>'] = cmp.mapping(function(fallback)
+                --     if cmp.visible() then
+                --         cmp.select_next_item()
+                --     elseif luasnip.expand_or_locally_jumpable() then
+                --         luasnip.expand_or_jump()
+                --     else
+                --         fallback()
+                --     end
+                -- end, { 'i', 's' }),
                 ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                 ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
                 ['<C-y>'] = cmp.mapping.confirm({ select = true }),
