@@ -233,21 +233,122 @@ simplified_ui true
 default_shell "zsh"
 pane_frames false
 session_serialization false
+
+theme "custom_tokyo_night"
 themes {
-    tokyo-night {
-        fg 169 177 214
-        bg 26 27 38
-        black 56 62 90
-        red 249 51 87
-        green 158 206 106
-        yellow 224 175 104
-        blue 122 162 247
-        magenta 187 154 247
-        cyan 42 195 222
-        white 192 202 245
-        orange 255 158 100
+  custom_tokyo_night {
+     styling {
+          text_unselected {
+              base "#a9b1d6"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#bb9af7"
+              emphasis_3 "#7dcfff"
+              emphasis_4 "#2ac3de"
+              background "#1a1b26"
+          }
+          text_selected {
+              base "#1a1b26"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#1a1b26"
+              emphasis_3 "#1a1b26"
+              emphasis_4 "#1a1b26"
+              background "#a9b1d6"
+          }
+          ribbon_unselected {
+              base "#a9b1d6"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#bb9af7"
+              emphasis_3 "#7dcfff"
+              emphasis_4 "#2ac3de"
+              background "#16161e"
+          }
+          ribbon_selected {
+              base "#1a1b26"
+              emphasis_1 "#f7768e"
+              emphasis_2 "#ff9e64"
+              emphasis_3 "#202330"
+              emphasis_4 "#16161e"
+              background "#7aa2f7"
+          }
+          table_title {
+              base "#a9b1d6"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#7dcfff"
+              emphasis_3 "#bb9af7"
+              emphasis_4 "#2ac3de"
+              background "#16161e"
+          }
+          table_cell_unselected {
+              base "#a9b1d6"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#bb9af7"
+              emphasis_3 "#7dcfff"
+              emphasis_4 "#2ac3de"
+              background "#1a1b26"
+          }
+          table_cell_selected {
+              base "#1a1b26"
+              emphasis_1 "#202330"
+              emphasis_2 "#24283b"
+              emphasis_3 "#292e42"
+              emphasis_4 "#3b4261"
+              background "#a9b1d6"
+          }
+          list_unselected {
+              base "#9ece6a"
+              emphasis_1 "#f7768e"
+              emphasis_2 "#ff9e64"
+              emphasis_3 "#e0af68"
+              emphasis_4 "#2ac3de"
+              background "#1a1b26"
+          }
+          list_selected {
+              base "#1a1b26"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#bb9af7"
+              emphasis_3 "#7dcfff"
+              emphasis_4 "#2ac3de"
+              background "#a9b1d6"
+          }
+          frame_unselected {
+              base "#a9b1d6"
+              emphasis_1 "#7aa2f7"
+              emphasis_2 "#7dcfff"
+              emphasis_3 "#bb9af7"
+              emphasis_4 "#2ac3de"
+          }
+          frame_selected {
+              base "#7aa2f7"
+              emphasis_1 "#f7768e"
+              emphasis_2 "#e0af68"
+              emphasis_3 "#7dcfff"
+              emphasis_4 "#2ac3de"
+          }
+          frame_highlight {
+              base "#ff9e64"
+              emphasis_1 "#ff9e64"
+              emphasis_2 "#ff9e64"
+              emphasis_3 "#ff9e64"
+              emphasis_4 "#ff9e64"
+          }
+          exit_code_success {
+              base "#9ece6a"
+              emphasis_1 "#73daca"
+              emphasis_2 "#9ece6a"
+              emphasis_3 "#9ece6a"
+              emphasis_4 "#9ece6a"
+          }
+          exit_code_error {
+              base "#f7768e"
+              emphasis_1 "#ff9e64"
+              emphasis_2 "#f7768e"
+              emphasis_3 "#f7768e"
+              emphasis_4 "#f7768e"
+          }
     }
+  }
 }
+
 default_layout "compact"
 default_mode "locked"
 copy_command "pbcopy"                     // osx
