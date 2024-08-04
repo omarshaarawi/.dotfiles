@@ -1,0 +1,54 @@
+[includeIf "gitdir:/Users/Shaarawi/"]
+    path = .gitconfig-personal
+[includeIf "gitdir:/Users/Z0044BF/"]
+    path = .gitconfig-work
+[core]
+	editor = nvim
+	fsmonitor = true
+[color]
+	ui = true
+[push]
+	followTags = true
+[init]
+	defaultBranch = main
+[rerere]
+	enabled = true
+[pull]
+	rebase = true
+    twohead = ort
+[fem]
+    marc = is ok
+    marc = is global
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[remote]
+	pushDefault = origin
+[branch]
+	autosetuprebase = always
+	sort = -committerdate
+[merge]
+	conflictStyle = zdiff3
+[pager]
+	difftool = true
+[maintenance]
+	auto = true
+	strategy = incremental
+[column]
+	ui = auto
+[alias]
+    mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
+	lasttag = "!git describe --tags --abbrev=0 HEAD^ && git log --oneline HEAD ^$(git describe --tags --abbrev=0 HEAD^) --no-merges"
+	commits = "cherry -v main @"
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	graph = log --all --decorate --oneline --graph
+	st = status
+	rh = reset HEAD
+	rhh = reset --hard HEAD
+	tree = log --oneline --decorate --graph
+	sup = "!git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`"
+	files = !git diff --name-only $(git merge-base HEAD main)
+	stat = !git diff --stat $(git merge-base HEAD main)
+	fpush = push --force-with-lease

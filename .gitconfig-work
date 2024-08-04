@@ -1,0 +1,10 @@
+[user]
+	name = Omar Shaarawi
+	email = Omar.Shaarawi@target.com
+[commit]
+	gpgsign = true
+	verbose = true
+[gpg]
+    program = gpg2
+[core]
+	excludesfile = /Users/Z0044BF/.gitignore

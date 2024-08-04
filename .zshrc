@@ -27,9 +27,10 @@ alias mv='mv -i'
 alias rm='rm -I'
 alias python=/usr/local/bin/python3
 
+eval "$(zellij setup --generate-auto-start zsh)"
+
 # Plugins
 plugins=(
-  git
   zsh-autosuggestions
   brew
   z
@@ -37,28 +38,6 @@ plugins=(
 
 # Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
-
-# Syntax Highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Config Aliases
-configs=(
-  git:"$HOME/.config/git/config"
-  nvim:"$HOME/.config/nvim/lua/shaarawi/packer.lua"
-  wezterm:"$HOME/.wezterm.lua"
-  zsh:"$HOME/.zshrc"
-)
-
-for key value in ${(kv)configs}; do
-  case $key in
-    zsh)
-      alias ${key}config="nvim $value && sz && echo '$value has been sourced'"
-      ;;
-    *)
-      alias ${key}config="nvim $value"
-      ;;
-  esac
-done
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
