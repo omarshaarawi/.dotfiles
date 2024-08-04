@@ -1,27 +1,50 @@
 # My dotfiles
 
-This directory contains the dotfiles for my system
+This repository contains the dotfiles for my system, managed using GNU Stow.
 
 ## Requirements
 
+### GNU Stow
+To manage these dotfiles, you need to have GNU Stow installed. On macOS, you can install it using Homebrew:
 
-### Stow
-
-```
+```bash
 brew install stow
 ```
 
+### Tools Configured (Currently in use)
+- Neovim - Code Editor
+- Zsh - Shell
+- Zellij - Terminal Multiplexer
+- Ghostty - Terminal Emulator
+
 ## Installation
 
-First, check out the dotfiles repo in your $HOME directory using git
+1. Clone the dotfiles repository to your home directory:
 
-```
-git clone git@github.com/omarshaarawi/.dotfiles.git
-cd dotfiles
+```bash
+git clone git@github.com:omarshaarawi/.dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
 ```
 
-then use the install script to setup the symlinks
+2. Use the Makefile to manage your dotfiles:
 
-```
-./install_scrips.sh
-```
+- To see available dotfiles:
+  ```bash
+  make list
+  ```
+
+- To stow all dotfiles:
+  ```bash
+  make stow
+  ```
+
+- To remove all symlinks:
+  ```bash
+  make unstow
+  ```
+
+- To restow all dotfiles:
+  ```bash
+  make restow
+  ```
+
