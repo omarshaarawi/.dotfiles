@@ -1,6 +1,7 @@
 [user]
 	name = Omar Shaarawi
 	email = Omar.Shaarawi@target.com
+	signingkey = 45335BCE49A2C840
 [commit]
 	gpgsign = true
 	verbose = true
