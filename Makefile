@@ -2,7 +2,7 @@ STOW := stow
 STOW_FLAGS := -v -t $(HOME)
 
 # All directories to stow
-STOW_DIRS := .scripts
+STOW_DIRS := .scripts .zsh
 
 # Individual files to stow
 STOW_FILES := .gitconfig .gitconfig-personal .gitconfig-work .wezterm.lua .zshrc
@@ -11,7 +11,7 @@ STOW_FILES := .gitconfig .gitconfig-personal .gitconfig-work .wezterm.lua .zshrc
 CONFIG_DIRS := nvim zellij ghostty
 
 # Backup suffix
-BACKUP_SUFFIX := _backup_$(shell date +%Y%m%d_%H%M%S)
+BACKUP_SUFFIX := .backup_$(shell date +%Y%m%d_%H%M%S)
 
 .PHONY: all stow unstow restow list help validate backup
 
@@ -30,6 +30,7 @@ restow: unstow stow
 backup:
 	@echo "Backing up existing configurations..."
 	@for dir in $(CONFIG_DIRS); do \
+		echo $(HOME)/.config/$$dir$(BACKUP_SUFFIX); \
 		if [ -e $(HOME)/.config/$$dir ]; then \
 			mv $(HOME)/.config/$$dir $(HOME)/.config/$$dir$(BACKUP_SUFFIX); \
 			echo "Backed up $$dir to $$dir$(BACKUP_SUFFIX)"; \
