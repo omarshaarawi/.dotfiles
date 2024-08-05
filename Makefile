@@ -1,63 +1,70 @@
-# Variables
-DOTFILES_DIR := $(HOME)/.dotfiles
-STOW_DIRS := $(filter-out .git .gitignore Makefile README.md install_scripts.sh,$(wildcard .[!.]* *))
-SCRIPTS_DIR=".scripts"
-CONFIG_DIR=".config"
-TIMESTAMP := $(shell date +%Y%m%d_%H%M%S)
+STOW := stow
+STOW_FLAGS := -v -t $(HOME)
 
+# All directories to stow
+STOW_DIRS := .scripts
 
-.PHONY: all init list stow unstow restow
+# Individual files to stow
+STOW_FILES := .gitconfig .gitconfig-personal .gitconfig-work .wezterm.lua .zshrc
 
-all: list
+# .config subdirectories to stow
+CONFIG_DIRS := nvim zellij ghostty
 
-# initialize the dirs if they don't exist
-init:
-	if [ ! -d $(HOME)/$(SCRIPTS_DIR) ]; then \
-		@mkdir -p $(HOME)/$(SCRIPTS_DIR); \
-	fi
-	if [ ! -d $(HOME)/$(CONFIG_DIR) ]; then \
-		@mkdir -p $(HOME)/$(CONFIG_DIR); \
-	fi
+# Backup suffix
+BACKUP_SUFFIX := _backup_$(shell date +%Y%m%d_%H%M%S)
 
+.PHONY: all stow unstow restow list help validate backup
 
-# List all items that can be stowed
-list:
-	@echo "Available items to stow:"
-	@for item in $(STOW_DIRS); do \
-		echo "  $$item"; \
-	done
+all: stow
 
-# Stow all items
-stow:
-	@for item in $(STOW_DIRS); do \
-		if [ -d "$$item" ]; then \
-			echo "Stowing directory: $$item"; \
-			stow -v -R -t $(HOME) $$item; \
-		else \
-			echo "Stowing file: $$item"; \
-			ln -svf $(DOTFILES_DIR)/$$item $(HOME)/$$item; \
-		fi; \
-	done
+stow: backup
+	@echo "Stowing dotfiles..."
+	@$(STOW) $(STOW_FLAGS)
 
-# Unstow all items
 unstow:
-	@for item in $(STOW_DIRS); do \
-		if [ -d "$$item" ]; then \
-			echo "Unstowing directory: $$item"; \
-			stow -v -D -t $(HOME) $$item; \
-		else \
-			echo "Removing symlink: $$item"; \
-			rm -vf $(HOME)/$$item; \
-		fi; \
-	done
+	@echo "Unstowing dotfiles..."
+	@$(STOW) -D $(STOW_FLAGS)
 
 restow: unstow stow
 
-# Help
+backup:
+	@echo "Backing up existing configurations..."
+	@for dir in $(CONFIG_DIRS); do \
+		if [ -e $(HOME)/.config/$$dir ]; then \
+			mv $(HOME)/.config/$$dir $(HOME)/.config/$$dir$(BACKUP_SUFFIX); \
+			echo "Backed up $$dir to $$dir$(BACKUP_SUFFIX)"; \
+		fi; \
+	done
+	@for file in $(STOW_FILES); do \
+		if [ -e $(HOME)/$$file ]; then \
+			mv $(HOME)/$$file $(HOME)/$$file$(BACKUP_SUFFIX); \
+			echo "Backed up $$file to $$file$(BACKUP_SUFFIX)"; \
+		fi; \
+	done
+
+validate:
+	@echo "Validating stowed items..."
+	@for dir in $(STOW_DIRS); do \
+		[ -L $(HOME)/$$dir ] && echo "$$dir: OK" || echo "$$dir: MISSING"; \
+	done
+	@for file in $(STOW_FILES); do \
+		[ -L $(HOME)/$$file ] && echo "$$file: OK" || echo "$$file: MISSING"; \
+	done
+	@for dir in $(CONFIG_DIRS); do \
+		[ -L $(HOME)/.config/$$dir ] && echo ".config/$$dir: OK" || echo ".config/$$dir: MISSING"; \
+	done
+
+list:
+	@echo "Directories to stow: $(STOW_DIRS)"
+	@echo "Files to stow: $(STOW_FILES)"
+	@echo ".config subdirectories to stow: $(CONFIG_DIRS)"
+
 help:
 	@echo "Available targets:"
-	@echo "  list        - List all items that can be stowed"
-	@echo "  stow        - Stow all items"
-	@echo "  unstow      - Unstow all items"
-	@echo "  restow      - Restow all items"
-	@echo "  help        - Show this help message"
+	@echo "  stow    - Stow all dotfiles (includes backup)"
+	@echo "  unstow  - Unstow all dotfiles"
+	@echo "  restow  - Restow all dotfiles"
+	@echo "  backup  - Backup existing configurations"
+	@echo "  validate- Validate stowed symlinks"
+	@echo "  list    - List all items to be stowed"
+	@echo "  help    - Show this help message"

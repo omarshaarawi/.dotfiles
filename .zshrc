@@ -38,6 +38,7 @@ plugins=(
 
 # Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
+source "$HOME/.cargo/env"
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
