@@ -1,0 +1,34 @@
+layout {
+    pane split_direction="vertical" {
+        pane focus=true{
+            cwd "~/git/autocast"
+            command "nvim"
+            args "."
+            name "code"
+        }
+        pane split_direction="horizontal" {
+            pane{
+                cwd "~/git/autocast"
+                command "make"
+                args "templ"
+                name "templ"
+            }
+            pane {
+                cwd "~/git/autocast"
+                command "make"
+                args "css"
+                name "css"
+            }
+            pane{
+                cwd "~/git/autocast"
+                command "make"
+                args "air"
+                name "air"
+            }
+        }
+    }
+     pane size=1 borderless=true {
+        plugin location="compact-bar"
+    }
+}
+

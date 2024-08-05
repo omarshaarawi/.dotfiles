@@ -47,6 +47,13 @@ keybinds {
     }
     tab {
         bind "Ctrl t" { SwitchToMode "Normal"; }
+        bind "a" {
+            NewTab {
+                cwd "~/git/autocast"
+                name "autocast"
+                layout "autocast"
+            }
+        }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
         bind "h" "Left" "Up" "k" { GoToPreviousTab; }
         bind "l" "Right" "Down" "j" { GoToNextTab; }
