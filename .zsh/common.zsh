@@ -12,6 +12,7 @@ alias vi='nvim'
 plugins=(
   zsh-autosuggestions
   z
+  brew
 )
 
 declare -x -A configs
