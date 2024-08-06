@@ -80,3 +80,5 @@ keybind = super+k=clear_screen
 
 ## i mean for gods sake macos
 window-vsync=false
+
+command = "/bin/zsh -l -c 'zellij attach main || zellij -s main'"
