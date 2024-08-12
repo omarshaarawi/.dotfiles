@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sessions=$(tmux list-sessions -F '#{session_name}')
+current_session=$(tmux display-message -p '#S')
+
+formatted_sessions=""
+for session in $sessions; do
+    if [ "$session" = "$current_session" ]; then
+        formatted_sessions+="#[fg=#1d202f,bg=#7aa2f7,bold] *$session #[fg=#7aa2f7,bg=#1f2335,nobold] "
+    else
+        formatted_sessions+="#[fg=#a9b1d6,bg=#1f2335,nobold]$session "
+    fi
+done
+
+echo -n "${formatted_sessions%}"
