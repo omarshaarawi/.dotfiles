@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Enable error reporting
+set -e
+
+# Path to store the temporary file
+TEMP_FILE="/tmp/tmux_scrollback_$(date +%s)"
+
+# Capture scrollback buffer
+tmux capture-pane -pS - | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' > "$TEMP_FILE" || { echo "Failed to capture pane"; exit 1; }
+
+
+# Determine the editor to use and the appropriate command to start at the end
+if [ -n "$EDITOR" ]; then
+    EDIT_CMD="$EDITOR"
+elif [ -n "$VISUAL" ]; then
+    EDIT_CMD="$VISUAL"
+else
+    EDIT_CMD="vim"
+fi
+
+case "$EDIT_CMD" in
+    *vim*)
+        EDIT_CMD="$EDIT_CMD +':normal G' '$TEMP_FILE'"
+        ;;
+    *nano*)
+        EDIT_CMD="$EDIT_CMD +999999 '$TEMP_FILE'"
+        ;;
+    *emacs*)
+        EDIT_CMD="$EDIT_CMD --eval '(progn (find-file \"$TEMP_FILE\") (end-of-buffer))'"
+        ;;
+    *)
+        EDIT_CMD="$EDIT_CMD '$TEMP_FILE'"
+        ;;
+esac
+
+# Open the file in the editor in a new tmux window
+tmux new-window -n "Scrollback" "bash -c \"$EDIT_CMD\"" || { echo "Failed to open new window"; exit 1; }
+
+# Wait for the window to close
+while tmux list-windows | grep -q "Scrollback"; do
+    sleep 1
+done
+
+# Clean up the temporary file
+rm -f "$TEMP_FILE"
+
+exit 0
