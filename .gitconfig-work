@@ -9,3 +9,5 @@
     program = gpg2
 [core]
 	excludesfile = /Users/Z0044BF/.gitignore
+[url "git@git.target.com:"]
+	insteadOf = https://git.target.com/

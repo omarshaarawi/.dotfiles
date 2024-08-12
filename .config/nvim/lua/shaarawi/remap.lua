@@ -58,6 +58,12 @@ vim.keymap.set("n", "<M-j>", "<C-w>j")
 vim.keymap.set("n", "<M-k>", "<C-w>k")
 vim.keymap.set("n", "<M-l>", "<C-w>l")
 --vim.keymap.set("n", "<leader>c", "<cmd>q<CR>")
+--
+---- resize window
+vim.keymap.set("n", "=", [[<cmd>vertical resize +5<cr>]]) -- make the window biger vertically
+vim.keymap.set("n", "-", [[<cmd>vertical resize -5<cr>]]) -- make the window smaller vertically
+vim.keymap.set("n", "+", [[<cmd>horizontal resize +2<cr>]]) -- make the window bigger horizontally by pressing shift and =
+vim.keymap.set("n", "_", [[<cmd>horizontal resize -2<cr>]]) -- make the window smaller horizontally by pressing shift and -
 
 -- Buffer navigation
 vim.keymap.set("n", "<leader>bn", "<cmd>bn<CR>")                -- Next buffer
