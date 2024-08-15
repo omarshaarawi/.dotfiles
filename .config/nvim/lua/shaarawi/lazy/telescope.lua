@@ -10,7 +10,7 @@ return {
         cond = function()
             return vim.fn.executable 'make' == 1
         end
-        }
+    }
     },
 
     config = function()
@@ -20,6 +20,15 @@ return {
         local trouble = require("trouble.sources.telescope")
 
         telescope.setup({
+
+            pickers = {
+                find_files = {
+                    find_command = { 'rg', '--files', '--hidden', '--sortr=modified', '--glob', '!.git' },
+                },
+                git_files = {
+                    find_command = { 'rg', '--files', '--hidden', '--sortr=modified', '--glob', '!.git' },
+                },
+            },
             defaults = {
                 mappings = {
                     i = { ["<C-t>"] = trouble.open },
