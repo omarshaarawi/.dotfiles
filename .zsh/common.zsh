@@ -43,6 +43,13 @@ for key value in ${(kv)configs}; do
     fi
 done
 
+tmp() {
+    local ext=$1
+    local file=$(mktemp /tmp/tmp.XXXXXXXXXX.$ext)
+    $EDITOR $file
+    rm $file
+}
+
 
 tmux_auto() {
     [[ $- != *i* ]] && return
