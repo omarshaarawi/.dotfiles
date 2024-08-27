@@ -5,10 +5,20 @@
 [core]
 	editor = nvim
 	fsmonitor = true
+    commitGraph = true
+	attributesfile = /Users/Z0044BF/.gitattributes
+    pager = delta
+[gc]
+    writeCommitGraph = true
+[scalar]
+    repo = true
 [color]
 	ui = true
 [push]
-	followTags = true
+    followTags = true
+    default = current
+    autoSetupRemote = true
+    force = with-lease
 [init]
 	defaultBranch = main
 [rerere]
@@ -33,11 +43,30 @@
 	conflictStyle = zdiff3
 [pager]
 	difftool = true
+[rebase]
+    autosquash = true
 [maintenance]
-	auto = true
-	strategy = incremental
+    auto = true
+    strategy = incremental
+    commit-graph = hourly
+    prefetch = hourly
+    gc = weekly
 [column]
 	ui = auto
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    light = false
+    side-by-side = true
+    line-numbers = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
 [alias]
     mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 	lasttag = "!git describe --tags --abbrev=0 HEAD^ && git log --oneline HEAD ^$(git describe --tags --abbrev=0 HEAD^) --no-merges"
