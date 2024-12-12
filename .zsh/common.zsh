@@ -19,7 +19,23 @@ plugins=(
   zsh-autosuggestions
   z
   brew
+  fzf-tab
 )
+
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:git-switch:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -l --color=always $realpath'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview \
+  '[[ $group == "[process ID]" ]] && ps -p $word -o comm= -o args='
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags --preview-window=down:3:wrap
+zstyle ':fzf-tab:*' switch-group ',' '.'
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+zstyle ':completion:*' show-dots yes
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 
 declare -x -A configs
 configs=(
