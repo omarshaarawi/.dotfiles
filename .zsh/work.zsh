@@ -87,13 +87,13 @@ vpnl() {
     expect \"Username:\"
     send \"$USER\r\"
     expect \"Password:\"
-    send \"`security find-generic-password -l 'target_lan_password' -w`\r\"
+    send \"`op read "op://Target/TargetHQ/password"`\r\"
     expect eof
   "
 }
 
 vpnd() {
-  /opt/cisco/anyconnect/bin/vpn -s disconnect
+  /opt/cisco/secureclient/bin/vpn -s disconnect
 }
 
 
