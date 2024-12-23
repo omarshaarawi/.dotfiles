@@ -13,7 +13,6 @@ $line_break\
 $character
 """
 
-
 [jobs]
 symbol = " "
 style = "bold bright-black"
@@ -79,18 +78,6 @@ error_symbol = '[\$](bold purple)'
 disabled = false
 format = "[\\($symbol$version\\)]($style) "
 style = "bold cyan"
-
-[kubernetes]
-disabled = false
-format = '[$symbol$context( \($namespace\))]($style)'
-contexts = [
-    { context_pattern = "*kind*", style = "cyan bold", symbol = "📚 " },
-    { context_pattern = "*rancher-desktop*", style = "cyan bold", symbol = "📚 " },
-
-    { context_pattern = "dev", style = "cyan bold", symbol = "🔵 " },
-    { context_pattern = "homolog", style = "yellow bold", symbol = "🟡 " },
-    { context_pattern = "prod", style = "red bold", symbol = "🔴 " },
-]
 
 [docker_context]
 disabled = false

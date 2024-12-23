@@ -4,3 +4,12 @@
 [submodule ".config/zsh-plugins/zsh-syntax-highlighting"]
 	path = .config/zsh-plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule ".config/tmux/plugins/tmux-floax"]
+	path = .config/tmux/plugins/tmux-floax
+	url = https://github.com/omerxx/tmux-floax.git
+[submodule ".config/tmux/plugins/tmux-sensible"]
+	path = .config/tmux/plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible.git
+[submodule ".config/tmux/plugins/tpm"]
+	path = .config/tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
