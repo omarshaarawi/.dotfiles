@@ -18,11 +18,33 @@ export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/config-base:${HOME}/.kube/
 export BIFROST_SERVER=https://bifrost-ca.target.com
 export VELA_ADDR=https://vela.prod.target.com
 
+unalias kubectl 2>/dev/null
+
+kubectl-switch() {
+    if [ "$1" = "1.9" ]; then
+        export KUBECTL_BINARY="/usr/local/bin/kubectl-1.9"
+        echo "Switched to kubectl v1.9"
+    elif [ "$1" = "1.27" ]; then
+        export KUBECTL_BINARY="/usr/local/bin/kubectl"
+        echo "Switched to kubectl v1.27"
+    else
+        echo "Usage: kubectl-switch [1.9|1.27]"
+    fi
+}
+
+export KUBECTL_BINARY="/usr/local/bin/kubectl"
+
 kubectl() {
-    unset -f kubectl
-    source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
-    source <(kubectl completion zsh)
-    kubectl "$@"
+    if [ "$1" = "version" ] && [ -z "$2" ]; then
+        $KUBECTL_BINARY version --short
+    else
+        # Load completion only once
+        if ! type __start_kubectl >/dev/null 2>&1; then
+            source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
+            source <($KUBECTL_BINARY completion zsh)
+        fi
+        $KUBECTL_BINARY "$@"
+    fi
 }
 
 lss() {
