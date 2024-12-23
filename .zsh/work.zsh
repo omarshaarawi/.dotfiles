@@ -119,40 +119,32 @@ vpnl() {
     printf "%s\n%s\n" "$USER" "$password" | /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
 }
 
-# vpnl() {
-#   expect -c "
-#     set timeout 10
-#     spawn /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
-#     expect \"Username:\"
-#     send \"$USER\r\"
-#     expect \"Password:\"
-#     send \"`op read "op://Target/TargetHQ/password"`\r\"
-#     expect eof
-#   "
-# }
-
 vpnd() {
   /opt/cisco/secureclient/bin/vpn -s disconnect
 }
 
 
-# disable sort when completing `git checkout`
-zstyle ':completion:*:git-checkout:*' sort false
-# set descriptions format to enable group support
-# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
-zstyle ':completion:*:descriptions' format '[%d]'
-# set list-colors to enable filename colorizing
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-# force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
-zstyle ':completion:*' menu no
-# preview directory's content with eza when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# custom fzf flags
-# NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
-# To make fzf-tab follow FZF_DEFAULT_OPTS.
-# NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
-zstyle ':fzf-tab:*' use-fzf-default-opts yes
-# switch group using `<` and `>`
-zstyle ':fzf-tab:*' switch-group '<' '>'
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+export CURRENT_STORE=""
+store() {
+    local store_number="$1"
+    if [[ -z "$store_number" ]]; then
+        if [[ -n "$CURRENT_STORE" ]]; then
+            echo "Current store: $CURRENT_STORE"
+        else
+            echo "No store currently set. Usage: store <store_number>"
+        fi
+        return
+    fi
+    CURRENT_STORE="$store_number"
+    echo "Store context set to: $CURRENT_STORE"
+}
+
+k() {
+    if [[ -z "$CURRENT_STORE" ]]; then
+        echo "No store set. Use 'store <store_number>' first"
+        return 1
+    fi
+    command storectl sk8 "$CURRENT_STORE" "$@"
+}
+
+compdef k=kubectl
