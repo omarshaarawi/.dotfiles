@@ -30,3 +30,27 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
 vim.g.mapleader = " "
+
+vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+        ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+        ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+    },
+    paste = {
+        ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+        ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+    },
+}
+
+
+vim.opt.list = true
+vim.opt.listchars = {
+    tab = '▸ ',
+    space = '·',
+    nbsp = '␣',
+    extends = '⟩',
+    precedes = '⟨'
+}
+
+vim.cmd [[highlight Whitespace ctermfg=DarkGray guifg=DarkGray]]
