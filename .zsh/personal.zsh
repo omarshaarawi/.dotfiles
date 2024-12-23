@@ -1,5 +1,13 @@
 # Personal-specific configurations
-export PATH="$PATH:$HOME/go/bin:/usr/local/go/bin:$HOME/.scripts:/opt/homebrew/bin:/usr/local/bin"
+typeset -U path
+path=(
+    "$HOME/go/bin"
+    "/usr/local/go/bin"
+    "$HOME/.scripts"
+    "/opt/homebrew/bin"
+    "/usr/local/bin"
+    $path
+)
 export GITHUB_USERNAME="omarshaarawi"
 PS1="%F{green}[PERSONAL]%f $PS1"
 

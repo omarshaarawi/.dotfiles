@@ -1,4 +1,11 @@
-export PATH="$PATH:$HOME/go/bin:/usr/local/sbin:/Applications/Sublime Text.app/Contents/SharedSupport/bin:/Applications/IntelliJ IDEA.app/Contents/MacOS"
+typeset -U path
+path=(
+    "$HOME/go/bin"
+    "/usr/local/sbin"
+    "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
+    "/Applications/IntelliJ IDEA.app/Contents/MacOS"
+    $path
+)
 export VAULT_ADDR=https://prod.vault.target.com:443
 export GH_HOST="git.target.com"
 export KUBE_EDITOR="nvim"

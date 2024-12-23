@@ -1,5 +1,10 @@
 # Common settings for both personal and work environments
-export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+ typeset -U path
+path=(
+    "$HOME/bin"
+    "$HOME/.local/bin"
+    $path
+)
 export EDITOR="nvim"
 export DEFAULT_USER="$(whoami)"
 export XDG_CONFIG_HOME="$HOME/.config"
