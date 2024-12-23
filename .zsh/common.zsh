@@ -2,10 +2,21 @@
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export DEFAULT_USER="$(whoami)"
-export ZSH="$HOME/.oh-my-zsh"
-export ZSH_THEME="robbyrussell"
 export XDG_CONFIG_HOME="$HOME/.config"
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+# fzf parameters used in all widgets - configure layout and wrapped the preview results (useful in large command rendering)
+export FZF_DEFAULT_OPTS="--height 100% --layout reverse --preview-window=wrap"
+
+# CTRL + R: put the selected history command in the preview window - "{}" will be replaced by item selected in fzf execution runtime
+export FZF_CTRL_R_OPTS="--preview 'echo {}'"
+
+# CTRL + T: set "fd-find" as search engine instead of "find" and exclude .git for the results
+export FZF_CTRL_T_COMMAND="fd --exclude .git --ignore-file $HOME/.my-custom-zsh/.fd-fzf-ignore"
+
+# CTRL + T: put the file content if item select is a file, or put tree command output if item selected is directory
+export FZF_CTRL_T_OPTS="--preview '[ -d {} ] && tree -C {} || bat --color=always --style=numbers {}'"
+
 
 # Aliases
 alias vim='nvim'
@@ -16,27 +27,58 @@ alias tl="tmux list-sessions"
 alias tk="tmux kill-session -t"
 alias tmux2clip='tmux capture-pane -pS - | clipwrite'
 
-plugins=(
-  zsh-autosuggestions
-  z
-  brew
-  fzf-tab
-)
+alias ll="ls -larht"
+alias rm="rm -i"
+alias cdd='cd "$HOME/Documents"'
+alias history="history 1"
 
-zstyle ':completion:*:git-checkout:*' sort false
-zstyle ':completion:*:git-switch:*' sort false
-zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -l --color=always $realpath'
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview \
-  '[[ $group == "[process ID]" ]] && ps -p $word -o comm= -o args='
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags --preview-window=down:3:wrap
-zstyle ':fzf-tab:*' switch-group ',' '.'
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
-zstyle ':completion:*' show-dots yes
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+stty -ixon
+setopt INTERACTIVE_COMMENTS
+setopt APPEND_HISTORY
+setopt INC_APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+
+bindkey -e
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # >>> OPT + right arrow | OPT + left arrow
+  bindkey "^[^[[C" forward-word
+  bindkey "^[^[[D" backward-word
+fi
+
+
+bindkey "^[[A" history-beginning-search-backward
+bindkey "^[[B" history-beginning-search-forward
+
+# jump to the start and end of the command line
+# >>> CTRL + A | CTRL + E
+bindkey "^A" beginning-of-line
+bindkey "^E" end-of-line
+# >>> Home | End
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+
+# navigate menu for command output
+zstyle ':completion:*:*:*:*:*' menu select
+bindkey '^[[Z' reverse-menu-complete
+
+# delete characters using the "delete" key
+bindkey "^[[3~" delete-char
+
+# fzf alias: CTRL + SPACE (gadget parameters configured in the FZF_CTRL_T_COMMAND environment variable)
+bindkey "^@" fzf-file-widget
+
+# >>> load ZSH plugin
+autoload -Uz compinit
+compinit
+source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
+source <(kubectl completion zsh)
+
+source "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 declare -x -A configs
 configs=(
@@ -47,6 +89,7 @@ configs=(
     tmux "$XDG_CONFIG_HOME/tmux/tmux.conf"
     zellij "$XDG_CONFIG_HOME/zellij/config.kdl"
     ghostty "$XDG_CONFIG_HOME/ghostty/config"
+    starship "$STARSHIP_CONFIG"
 )
 for key value in ${(kv)configs}; do
     if [[ $key == "zsh" ]]

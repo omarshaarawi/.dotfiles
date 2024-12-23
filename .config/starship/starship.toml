@@ -1,0 +1,97 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$jobs\
+$hostname\
+$directory\
+$fill\
+$git_branch\
+$git_status\
+$git_commit\
+$git_state\
+$line_break\
+$character
+"""
+
+
+[jobs]
+symbol = " "
+style = "bold bright-black"
+
+[hostname]
+ssh_only = true
+format = "[](fg:#252525 bg:none)[█](fg:#E8E3E3 bg:#252525)[$ssh_symbol$hostname](bold bg:#E8E3E3)[](fg:#E8E3E3 bg:none) "
+disabled = false
+
+[line_break]
+disabled = false
+
+[fill]
+symbol = ' '
+style = 'bold green'
+
+[directory]
+style = "fg:#e3e5e5"
+format = "[ $path ]($style)"
+truncate_to_repo = false
+truncation_length = 0
+
+[git_commit]
+format = "[\\($hash\\)]($style) [\\($tag\\)]($style)"
+style = "green"
+
+[git_branch]
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0)]($style)'
+
+[git_status]
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0)]($style)'
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+up_to_date = " 󰄸 "
+untracked = "?${count}"
+stashed = ""
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = " ${count}"
+
+[git_state]
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+am = "AM"
+am_or_rebase = "AM/REBASE"
+style = "yellow"
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+[character]
+success_symbol = '[\$](bold purple)'
+error_symbol = '[\$](bold purple)'
+
+[golang]
+disabled = false
+format = "[\\($symbol$version\\)]($style) "
+style = "bold cyan"
+
+[kubernetes]
+disabled = false
+format = '[$symbol$context( \($namespace\))]($style)'
+contexts = [
+    { context_pattern = "*kind*", style = "cyan bold", symbol = "📚 " },
+    { context_pattern = "*rancher-desktop*", style = "cyan bold", symbol = "📚 " },
+
+    { context_pattern = "dev", style = "cyan bold", symbol = "🔵 " },
+    { context_pattern = "homolog", style = "yellow bold", symbol = "🟡 " },
+    { context_pattern = "prod", style = "red bold", symbol = "🔴 " },
+]
+
+[docker_context]
+disabled = false
+format = "[\\($symbol$context\\)]($style) "
