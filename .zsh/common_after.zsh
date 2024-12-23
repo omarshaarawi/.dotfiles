@@ -1,12 +1,18 @@
 # Load syntax highlighting if available (for work environment)
- source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# Load Cargo environment if available
-source "$HOME/.cargo/env"
+cargo() {
+    unset -f cargo
+    source "$HOME/.cargo/env"
+    cargo "$@"
+}
 
-# Load SDKMAN if available
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk() {
+    unset -f sdk
+    export SDKMAN_DIR="$HOME/.sdkman"
+    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+    sdk "$@"
+}
 
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"

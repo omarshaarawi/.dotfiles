@@ -11,7 +11,12 @@ export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/config-base:${HOME}/.kube/
 export BIFROST_SERVER=https://bifrost-ca.target.com
 export VELA_ADDR=https://vela.prod.target.com
 
-plugins+=(asdf kubectl)
+kubectl() {
+    unset -f kubectl
+    source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
+    source <(kubectl completion zsh)
+    kubectl "$@"
+}
 
 lss() {
     ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
@@ -81,16 +86,21 @@ k8s() {
 
 
 vpnl() {
-  expect -c "
-    set timeout 10
-    spawn /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
-    expect \"Username:\"
-    send \"$USER\r\"
-    expect \"Password:\"
-    send \"`op read "op://Target/TargetHQ/password"`\r\"
-    expect eof
-  "
+    local password=$(op read "op://Target/TargetHQ/password")
+    printf "%s\n%s\n" "$USER" "$password" | /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
 }
+
+# vpnl() {
+#   expect -c "
+#     set timeout 10
+#     spawn /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
+#     expect \"Username:\"
+#     send \"$USER\r\"
+#     expect \"Password:\"
+#     send \"`op read "op://Target/TargetHQ/password"`\r\"
+#     expect eof
+#   "
+# }
 
 vpnd() {
   /opt/cisco/secureclient/bin/vpn -s disconnect

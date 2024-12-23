@@ -72,24 +72,19 @@ bindkey "^[[3~" delete-char
 bindkey "^@" fzf-file-widget
 
 # >>> load ZSH plugin
-autoload -Uz compinit
-compinit
-source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
-source <(kubectl completion zsh)
-
 source "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-declare -x -A configs
+typeset -A configs
 configs=(
-    git "$XDG_CONFIG_HOME/git/config"
-    wezterm "$HOME/.wezterm.lua"
-    ssh "$HOME/.ssh/config"
-    zsh "$HOME/.zshrc"
-    tmux "$XDG_CONFIG_HOME/tmux/tmux.conf"
-    zellij "$XDG_CONFIG_HOME/zellij/config.kdl"
-    ghostty "$XDG_CONFIG_HOME/ghostty/config"
-    starship "$STARSHIP_CONFIG"
+    [git]="$XDG_CONFIG_HOME/git/config"
+    [wezterm]="$HOME/.wezterm.lua"
+    [ssh]="$HOME/.ssh/config"
+    [zsh]="$HOME/.zshrc"
+    [tmux]="$XDG_CONFIG_HOME/tmux/tmux.conf"
+    [zellij]="$XDG_CONFIG_HOME/zellij/config.kdl"
+    [ghostty]="$XDG_CONFIG_HOME/ghostty/config"
+    [starship]="$STARSHIP_CONFIG"
 )
 for key value in ${(kv)configs}; do
     if [[ $key == "zsh" ]]
