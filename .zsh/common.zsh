@@ -88,4 +88,4 @@ tmux_auto() {
 }
 
 
-# tmux_auto
+tmux_auto

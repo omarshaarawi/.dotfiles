@@ -7,7 +7,6 @@
 	fsmonitor = true
     commitGraph = true
 	attributesfile = /Users/Z0044BF/.gitattributes
-    pager = delta
 [gc]
     writeCommitGraph = true
 [scalar]
@@ -53,14 +52,6 @@
     gc = weekly
 [column]
 	ui = auto
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true
-    light = false
-    side-by-side = true
-    line-numbers = true
 
 [merge]
     conflictstyle = diff3
@@ -81,3 +72,9 @@
 	files = !git diff --name-only $(git merge-base HEAD main)
 	stat = !git diff --stat $(git merge-base HEAD main)
 	fpush = push --force-with-lease
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential

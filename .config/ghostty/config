@@ -26,7 +26,7 @@ font-family = "Berkeley Mono"
 font-feature = "-calt"
 font-feature = "-dlig"
 font-feature = "-liga"
-font-size = 12
+font-size = 14
 
 shell-integration = zsh
 shell-integration-features = cursor,sudo,title
