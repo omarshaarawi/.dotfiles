@@ -147,4 +147,41 @@ k() {
     command storectl sk8 "$CURRENT_STORE" "$@"
 }
 
-compdef k=kubectl
+k8s_restart_reason() {
+    local namespace="" pod_pattern="" store_number="$CURRENT_STORE"
+
+    if [[ -z "$store_number" ]]; then
+        echo "No store set. Use 'store <store_number>' first"
+        return 1
+    fi
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -A|--all-namespaces)
+                namespace="-A"
+                shift
+                ;;
+            -n|--namespace)
+                namespace="-n $2"
+                shift 2
+                ;;
+            *)
+                pod_pattern="$1"
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -z "$namespace" ]]; then
+        namespace="-n kube-system"
+    fi
+
+    local cmd="storectl sk8 $store_number get pods $namespace -o jsonpath='{range .items[*]}{.metadata.name}{\"\n\"}{range .status.containerStatuses[*]}  Container: {.name}{\"\n\"}  Last State: {.lastState}{\"\n\"}{end}{\"----------\n\"}{end}'"
+
+    if [[ -n "$pod_pattern" ]]; then
+        eval "$cmd" | rg -A 3 "${pod_pattern}"
+    else
+        eval "$cmd"
+    fi
+}
