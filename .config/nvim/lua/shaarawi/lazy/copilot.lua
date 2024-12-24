@@ -1,6 +1,14 @@
 return {
     {
         "github/copilot.vim",
+        enabled = function()
+            local file = io.open(os.getenv("HOME") .. "/.is_work_machine")
+            if file then
+                file:close()
+                return true
+            end
+            return false
+        end,
         config = function()
             vim.g.copilot_filetypes = {
                 ["TelescopePrompt"] = false,

@@ -116,8 +116,11 @@ return {
             },
             mapping = cmp.mapping.preset.insert({
                 ['<Tab>'] = cmp.mapping(function(fallback)
+                    local suggestion = require('supermaven-nvim.completion_preview')
                     if cmp.visible() then
                         cmp.select_next_item()
+                    elseif suggestion.has_suggestion() then
+                        suggestion.on_accept_suggestion()
                     elseif luasnip.expand_or_locally_jumpable() then
                         luasnip.expand_or_jump()
                     else
@@ -130,6 +133,7 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(),
             }),
             sources = cmp.config.sources({
+                { name = 'supermaven' },
                 { name = 'nvim_lsp' },
                 { name = 'luasnip' }, -- For luasnip users.
             }, {
