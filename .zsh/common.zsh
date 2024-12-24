@@ -3,6 +3,7 @@
 path=(
     "$HOME/bin"
     "$HOME/.local/bin"
+    "$HOME/.scripts"
     $path
 )
 export EDITOR="nvim"

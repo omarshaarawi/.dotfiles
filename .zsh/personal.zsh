@@ -3,7 +3,6 @@ typeset -U path
 path=(
     "$HOME/go/bin"
     "/usr/local/go/bin"
-    "$HOME/.scripts"
     "/opt/homebrew/bin"
     "/usr/local/bin"
     $path
