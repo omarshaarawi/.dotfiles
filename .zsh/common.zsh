@@ -111,26 +111,37 @@ tmp() {
     rm $file
 }
 
-
-tmux_auto() {
-    [[ $- != *i* ]] && return
-    if [[ -z "$TMUX" ]] && command -v tmux &> /dev/null; then
-        tmux attach 2>/dev/null
-        if [[ $? -ne 0 ]]; then
-            if tmux ls 2>/dev/null | grep -v attached &>/dev/null; then
-                echo "Detached sessions exist. Attach? (y/n)"
-                read -r response
-                if [[ "$response" =~ ^[Yy]$ ]]; then
-                    exec tmux attach
-                else
-                    exec tmux new-session
-                fi
-            else
-                exec tmux new-session
-            fi
-        fi
+function gp() {
+    local dir
+    dir=$(find ~/git ~/git/vessel ~/ -mindepth 1 -maxdepth 1 -type d | fzf)
+    if [[ -n $dir ]]; then
+        cd "$dir"
+        # Clear screen for clean slate
+        clear
     fi
 }
 
 
-tmux_auto
+
+# tmux_auto() {
+#     [[ $- != *i* ]] && return
+#     if [[ -z "$TMUX" ]] && command -v tmux &> /dev/null; then
+#         tmux attach 2>/dev/null
+#         if [[ $? -ne 0 ]]; then
+#             if tmux ls 2>/dev/null | grep -v attached &>/dev/null; then
+#                 echo "Detached sessions exist. Attach? (y/n)"
+#                 read -r response
+#                 if [[ "$response" =~ ^[Yy]$ ]]; then
+#                     exec tmux attach
+#                 else
+#                     exec tmux new-session
+#                 fi
+#             else
+#                 exec tmux new-session
+#             fi
+#         fi
+#     fi
+# }
+#
+#
+# tmux_auto
