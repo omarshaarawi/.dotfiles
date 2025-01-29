@@ -116,11 +116,11 @@ return {
             },
             mapping = cmp.mapping.preset.insert({
                 ['<Tab>'] = cmp.mapping(function(fallback)
-                    local suggestion = require('supermaven-nvim.completion_preview')
+                    -- local suggestion = require('supermaven-nvim.completion_preview')
                     if cmp.visible() then
                         cmp.select_next_item()
-                    elseif suggestion.has_suggestion() then
-                        suggestion.on_accept_suggestion()
+                    -- elseif suggestion.has_suggestion() then
+                    --     suggestion.on_accept_suggestion()
                     elseif luasnip.expand_or_locally_jumpable() then
                         luasnip.expand_or_jump()
                     else
