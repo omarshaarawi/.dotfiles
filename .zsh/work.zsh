@@ -10,7 +10,7 @@ export VAULT_ADDR=https://prod.vault.target.com:443
 export GH_HOST="git.target.com"
 export KUBE_EDITOR="nvim"
 export OP_BIOMETRIC_UNLOCK_ENABLED=true
-export DOCKER_HOST=unix://$HOME/.colima/default/docker.sock
+#export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
 export ZSH_DISABLE_COMPFIX=true
 export GOPRIVATE=git.target.com
 export GOPROXY=https://binrepo.target.com/artifactory/golang-remote
@@ -18,33 +18,54 @@ export KUBECONFIG="${HOME}/.kube/config:${HOME}/.kube/config-base:${HOME}/.kube/
 export BIFROST_SERVER=https://bifrost-ca.target.com
 export VELA_ADDR=https://vela.prod.target.com
 
-unalias kubectl 2>/dev/null
+kversion() {
+    local VERSION_DIR="/usr/local/bin"
+    local KUBECTL_LINK="/usr/local/bin/kubectl"
 
-kubectl-switch() {
-    if [ "$1" = "1.9" ]; then
-        export KUBECTL_BINARY="/usr/local/bin/kubectl-1.9"
-        echo "Switched to kubectl v1.9"
-    elif [ "$1" = "1.27" ]; then
-        export KUBECTL_BINARY="/usr/local/bin/kubectl"
-        echo "Switched to kubectl v1.27"
-    else
-        echo "Usage: kubectl-switch [1.9|1.27]"
-    fi
-}
+    case "$1" in
+        "")
+            # Show current version and target
+            echo "Current kubectl symlink points to:"
+            ls -l $KUBECTL_LINK || echo "No kubectl symlink found"
+            echo "\nCurrent version:"
+            kubectl version --client
+            echo "\nAvailable versions:"
+            ls -1 $VERSION_DIR | grep "kubectl-" | sed 's/kubectl-//'
+            ;;
+        "ls"|"list")
+            # List available versions
+            echo "Available kubectl versions:"
+            ls -1 $VERSION_DIR | grep "kubectl-" | sed 's/kubectl-//'
+            ;;
+        *)
+            # Switch version
+            local TARGET="$VERSION_DIR/kubectl-$1"
+            if [[ -f "$TARGET" ]]; then
+                echo "Switching to kubectl version $1"
+                sudo rm -f "$KUBECTL_LINK"
+                sudo ln -sf "$TARGET" "$KUBECTL_LINK"
+                if [[ $? -eq 0 ]]; then
+                    hash -r  # Clear hash table of command locations
+                    # Force shell to forget old location of kubectl
+                    unset -f kubectl
+                    # Clear zsh command hash
+                    rehash
+                    echo "Successfully switched to kubectl version $1"
+                    kubectl version --client
 
-export KUBECTL_BINARY="/usr/local/bin/kubectl"
-
-kubectl() {
-    if [ "$1" = "version" ] && [ -z "$2" ]; then
-        $KUBECTL_BINARY version --short
-    else
-        # Load completion only once
-        if ! type __start_kubectl >/dev/null 2>&1; then
-            source "$XDG_CONFIG_HOME/zsh-plugins/kubectl.plugin.zsh"
-            source <($KUBECTL_BINARY completion zsh)
-        fi
-        $KUBECTL_BINARY "$@"
-    fi
+                    # Update shell completion
+                    source <(kubectl completion zsh)
+                else
+                    echo "Failed to switch kubectl version"
+                    return 1
+                fi
+            else
+                echo "Version $1 not found. Available versions:"
+                ls -1 $VERSION_DIR | grep "kubectl-" | sed 's/kubectl-//'
+                return 1
+            fi
+            ;;
+    esac
 }
 
 lss() {
@@ -86,34 +107,6 @@ decode() {
   echo "$1" | base64 -d ; echo
 }
 
-
-k8s() {
-  local version="$1"
-  local binary_path="/usr/local/bin"
-  local binary_regex="kubectl(-v)?(-)?1\.${version}(\.[0-9]*)?"
-
-  if [[ -z "$version" ]]; then
-    echo "Povide a version number."
-    return 1
-  fi
-
-  local binary=$(ls "$binary_path" | grep -E "$binary_regex" | sort -rn | head -1)
-  echo "Using $binary"
-
-  if [[ -z "$binary" ]]; then
-      echo "kubectl-1.$version not found."
-    binary="kubectl-1.9"
-    if [[ ! -f "$binary_path/$binary" ]]; then
-      echo "kubectl-1.$version not found."
-      return 1
-    fi
-  fi
-
-  echo "Symlinking $binary to $HOME/bin/kubectl"
-  ln -sfv "$binary_path/$binary" "$HOME/bin/kubectl"
-}
-
-
 vpnl() {
     local password=$(op read "op://Target/TargetHQ/password")
     printf "%s\n%s\n" "$USER" "$password" | /opt/cisco/secureclient/bin/vpn -s connect TGT_VPN_MAC
@@ -121,30 +114,6 @@ vpnl() {
 
 vpnd() {
   /opt/cisco/secureclient/bin/vpn -s disconnect
-}
-
-
-export CURRENT_STORE=""
-store() {
-    local store_number="$1"
-    if [[ -z "$store_number" ]]; then
-        if [[ -n "$CURRENT_STORE" ]]; then
-            echo "Current store: $CURRENT_STORE"
-        else
-            echo "No store currently set. Usage: store <store_number>"
-        fi
-        return
-    fi
-    CURRENT_STORE="$store_number"
-    echo "Store context set to: $CURRENT_STORE"
-}
-
-k() {
-    if [[ -z "$CURRENT_STORE" ]]; then
-        echo "No store set. Use 'store <store_number>' first"
-        return 1
-    fi
-    command storectl sk8 "$CURRENT_STORE" "$@"
 }
 
 k8s_restart_reason() {
@@ -185,3 +154,5 @@ k8s_restart_reason() {
         eval "$cmd"
     fi
 }
+
+[[ -z "$KUBECTL_BINARY" ]] && export KUBECTL_BINARY="$HOME/.kubectl-versions/kubectl-latest"
