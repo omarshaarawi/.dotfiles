@@ -32,7 +32,6 @@ unfocused-split-fill = #282c34
 split-divider-color = #444444
 
 theme = tokyonight
-text-blending = linear-corrected
 
 minimum-contrast = 1.2
 background-opacity = 0.95
