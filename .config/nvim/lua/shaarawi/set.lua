@@ -43,14 +43,13 @@ vim.g.clipboard = {
     },
 }
 
+-- Disable whitespace characters
+vim.opt.list = false
+-- vim.opt.listchars = {
+--     tab = '▸ ',
+--     space = '·',
+--     nbsp = '␣',
+--     extends = '⟩',
+--     precedes = '⟨'
+-- }
 
-vim.opt.list = true
-vim.opt.listchars = {
-    tab = '▸ ',
-    space = '·',
-    nbsp = '␣',
-    extends = '⟩',
-    precedes = '⟨'
-}
-
-vim.cmd [[highlight Whitespace ctermfg=DarkGray guifg=DarkGray]]
