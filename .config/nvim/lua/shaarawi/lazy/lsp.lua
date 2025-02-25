@@ -11,6 +11,9 @@ return {
         { "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "hrsh7th/cmp-nvim-lua", -- Add Lua API completion
+        "hrsh7th/cmp-calc",     -- Add calculator completion
+        "hrsh7th/cmp-emoji",    -- Add emoji completion
     },
 
     config = function()
@@ -22,6 +25,12 @@ return {
             {},
             vim.lsp.protocol.make_client_capabilities(),
             cmp_lsp.default_capabilities())
+
+        -- Helper function to check if words exist before cursor
+        local has_words_before = function()
+            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+            return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+        end
 
         require("fidget").setup({})
         require("mason").setup()
@@ -35,6 +44,11 @@ return {
                 "tailwindcss",
                 "zls",
                 "templ",
+                "pyright", -- Python
+                "jsonls",  -- JSON
+                "yamlls",  -- YAML
+                "cssls",   -- CSS
+                "bashls",  -- Bash
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -59,12 +73,11 @@ return {
                     require 'lspconfig'.htmx.setup({
                         filetypes = { 'html', 'templ' },
                         capabilities = capabilities,
-
                     })
                 end,
                 tailwindcss = function()
                     require 'lspconfig'.tailwindcss.setup({
-                        filetypes = { "templ", "astro", "javascript", "typescript", "react" },
+                        filetypes = { "templ", "astro", "javascript", "typescript", "react", "svelte" },
                         settings = {
                             tailwindCSS = {
                                 includeLanguages = {
@@ -114,15 +127,35 @@ return {
                     require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
                 end,
             },
+            window = {
+                completion = {
+                    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+                    winhighlight = "Normal:CmpNormal",
+                },
+                documentation = {
+                    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+                    winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+                    max_width = 80,
+                    max_height = 20,
+                },
+            },
             mapping = cmp.mapping.preset.insert({
                 ['<Tab>'] = cmp.mapping(function(fallback)
-                    -- local suggestion = require('supermaven-nvim.completion_preview')
                     if cmp.visible() then
                         cmp.select_next_item()
-                    -- elseif suggestion.has_suggestion() then
-                    --     suggestion.on_accept_suggestion()
                     elseif luasnip.expand_or_locally_jumpable() then
                         luasnip.expand_or_jump()
+                    elseif has_words_before() then
+                        cmp.complete()
+                    else
+                        fallback()
+                    end
+                end, { 'i', 's' }),
+                ['<S-Tab>'] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item()
+                    elseif luasnip.jumpable(-1) then
+                        luasnip.jump(-1)
                     else
                         fallback()
                     end
@@ -131,18 +164,85 @@ return {
                 ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
                 ['<C-y>'] = cmp.mapping.confirm({ select = true }),
                 ["<C-Space>"] = cmp.mapping.complete(),
+                ['<C-e>'] = cmp.mapping.abort(),
+                ['<CR>'] = cmp.mapping.confirm({ select = false }),
             }),
             sources = cmp.config.sources({
                 { name = 'supermaven' },
                 { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
+                { name = 'luasnip' },
+                { name = 'path' },
+                { name = 'nvim_lua' },
+            }, {
+                { name = 'buffer' },
+                { name = 'calc' },
+                { name = 'emoji' },
+            }),
+            formatting = {
+                format = function(entry, vim_item)
+                    -- Set a name for each source
+                    vim_item.menu = ({
+                        supermaven = "[SM]",
+                        nvim_lsp = "[LSP]",
+                        luasnip = "[Snippet]",
+                        buffer = "[Buffer]",
+                        path = "[Path]",
+                        nvim_lua = "[Lua]",
+                        calc = "[Calc]",
+                        emoji = "[Emoji]",
+                    })[entry.source.name]
+                    return vim_item
+                end
+            },
+        })
+
+        -- Set configuration for specific filetype.
+        cmp.setup.filetype('gitcommit', {
+            sources = cmp.config.sources({
+                { name = 'git' },
             }, {
                 { name = 'buffer' },
             })
         })
 
+        -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+        cmp.setup.cmdline({ '/', '?' }, {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = {
+                { name = 'buffer' }
+            }
+        })
+
+        -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+        cmp.setup.cmdline(':', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({
+                { name = 'path' }
+            }, {
+                { name = 'cmdline' }
+            })
+        })
+
+        -- Setup lspconfig.
+        local format_group = vim.api.nvim_create_augroup("LspFormatting", {})
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = format_group,
+            pattern = { "*.go", "*.rs", "*.lua", "*.js", "*.ts", "*.jsx", "*.tsx" },
+            callback = function() vim.lsp.buf.format() end,
+        })
+
+        -- Enable inlay hints if supported
+        if vim.lsp.inlay_hint then
+            vim.keymap.set("n", "<leader>ih", function()
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            end, { desc = "Toggle Inlay Hints" })
+        end
+
         vim.diagnostic.config({
-            -- update_in_insert = true,
+            virtual_text = {
+                prefix = '●', -- Could be '■', '▎', 'x'
+                source = "if_many",
+            },
             float = {
                 focusable = false,
                 style = "minimal",
@@ -151,6 +251,17 @@ return {
                 header = "",
                 prefix = "",
             },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
         })
+
+        -- Change diagnostic symbols in the sign column
+        local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+        end
     end
 }

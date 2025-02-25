@@ -14,12 +14,12 @@ $character
 """
 
 [jobs]
-symbol = " "
-style = "bold bright-black"
+symbol = " "
+style = "bold #54546D"  # Darker muted color from Kanagawa
 
 [hostname]
 ssh_only = true
-format = "[](fg:#252525 bg:none)[█](fg:#E8E3E3 bg:#252525)[$ssh_symbol$hostname](bold bg:#E8E3E3)[](fg:#E8E3E3 bg:none) "
+format = "[](fg:#1F1F28 bg:none)[█](fg:#DCD7BA bg:#1F1F28)[$ssh_symbol$hostname](bold bg:#DCD7BA fg:#1F1F28)[](fg:#DCD7BA bg:none) "
 disabled = false
 
 [line_break]
@@ -27,37 +27,37 @@ disabled = false
 
 [fill]
 symbol = ' '
-style = 'bold green'
+style = 'bold #7E9CD8'  # Kanagawa blue
 
 [directory]
-style = "fg:#e3e5e5"
+style = "fg:#DCD7BA"  # Kanagawa foreground
 format = "[ $path ]($style)"
 truncate_to_repo = false
 truncation_length = 0
 
 [git_commit]
 format = "[\\($hash\\)]($style) [\\($tag\\)]($style)"
-style = "green"
+style = "#76946A"  # Kanagawa green
 
 [git_branch]
-symbol = ""
-style = "bg:#394260"
-format = '[[ $symbol $branch ](fg:#769ff0)]($style)'
+symbol = ""
+style = "bg:#223249"  # Darker background
+format = '[[ $symbol $branch ](fg:#7E9CD8)]($style)'  # Kanagawa blue
 
 [git_status]
-style = "bg:#394260"
-format = '[[($all_status$ahead_behind )](fg:#769ff0)]($style)'
+style = "bg:#223249"  # Darker background
+format = '[[($all_status$ahead_behind )](fg:#7E9CD8)]($style)'  # Kanagawa blue
 conflicted = "="
 ahead = "⇡${count}"
 behind = "⇣${count}"
 diverged = "⇕⇡${ahead_count}⇣${behind_count}"
 up_to_date = " 󰄸 "
 untracked = "?${count}"
-stashed = ""
+stashed = ""
 modified = "!${count}"
 staged = "+${count}"
 renamed = "»${count}"
-deleted = " ${count}"
+deleted = " ${count}"
 
 [git_state]
 rebase = "REBASING"
@@ -67,18 +67,20 @@ cherry_pick = "CHERRY-PICKING"
 bisect = "BISECTING"
 am = "AM"
 am_or_rebase = "AM/REBASE"
-style = "yellow"
+style = "#DCA561"  # Kanagawa yellow
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 
 [character]
-success_symbol = '[\$](bold purple)'
-error_symbol = '[\$](bold purple)'
+success_symbol = '[\$](bold #957FB8)'  # Kanagawa purple
+error_symbol = '[\$](bold #C34043)'    # Kanagawa red
 
 [golang]
 disabled = false
 format = "[\\($symbol$version\\)]($style) "
-style = "bold cyan"
+style = "bold #7AA89F"  # Kanagawa cyan/teal
 
 [docker_context]
 disabled = false
 format = "[\\($symbol$context\\)]($style) "
+style = "bold #7E9CD8"  # Kanagawa blue
+

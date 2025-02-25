@@ -9,7 +9,6 @@ return { {
 
             keymaps = {
                 ["<C-h>"] = false,
-                ["<M-h>"] = "actions.select_split",
             },
 
         })
