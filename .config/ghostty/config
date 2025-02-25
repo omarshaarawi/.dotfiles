@@ -5,7 +5,7 @@ font-family-bold-italic = "Berkeley Mono"
 font-feature = "-calt,-dlig,-liga"
 font-size = 14
 font-synthetic-style = bold,italic,bold-italic
-alpha-blending = linear
+alpha-blending = native
 
 cursor-style = block
 cursor-color = #ffffff
