@@ -8,7 +8,7 @@ return {
                 undercurl = true,
                 commentStyle = { italic = false },
                 keywordStyle = { italic = false },
-                statementStyle = { bold = true },
+                statementStyle = { bold = false },
                 transparent = true,
                 dimInactive = false,
                 terminalColors = true,

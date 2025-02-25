@@ -32,6 +32,16 @@ return {
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
         end
 
+        -- Helper function to check if we're on a work machine
+        local function is_work_machine()
+            local file = io.open(os.getenv("HOME") .. "/.is_work_machine")
+            if file then
+                file:close()
+                return true
+            end
+            return false
+        end
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -167,21 +177,43 @@ return {
                 ['<C-e>'] = cmp.mapping.abort(),
                 ['<CR>'] = cmp.mapping.confirm({ select = false }),
             }),
-            sources = cmp.config.sources({
-                { name = 'supermaven' },
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' },
-                { name = 'path' },
-                { name = 'nvim_lua' },
-            }, {
-                { name = 'buffer' },
-                { name = 'calc' },
-                { name = 'emoji' },
-            }),
+            sources = (function()
+                local sources = {}
+
+                -- Environment-specific sources
+                if is_work_machine() then
+                    table.insert(sources, { name = 'copilot' })
+                else
+                    table.insert(sources, { name = 'supermaven' })
+                end
+
+                -- Base sources that are always included
+                local base_sources = {
+                    { name = 'nvim_lsp' },
+                    { name = 'luasnip' },
+                    { name = 'path' },
+                    { name = 'nvim_lua' },
+                }
+
+                -- Add the base sources
+                for _, source in ipairs(base_sources) do
+                    table.insert(sources, source)
+                end
+
+                return cmp.config.sources(
+                    sources,
+                    {
+                        { name = 'buffer' },
+                        { name = 'calc' },
+                        { name = 'emoji' },
+                    }
+                )
+            end)(),
             formatting = {
                 format = function(entry, vim_item)
                     -- Set a name for each source
                     vim_item.menu = ({
+                        copilot = "[CP]",
                         supermaven = "[SM]",
                         nvim_lsp = "[LSP]",
                         luasnip = "[Snippet]",
