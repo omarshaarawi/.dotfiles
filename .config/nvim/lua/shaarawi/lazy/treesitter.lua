@@ -28,6 +28,7 @@ return {
                 "gowork",
                 "gosum",
                 "proto",
+                "vim",
             },
             ignore_install = { "javascript" },
             modules = {},
@@ -37,6 +38,9 @@ return {
             highlight = {
                 enable = true,
                 additional_vim_regex_highlighting = { "markdown" },
+            },
+            fold = {
+                enable = true,
             },
         }
         local treesitter_parser_config = require("nvim-treesitter.parsers").get_parser_configs()

@@ -1,4 +1,4 @@
-vim.opt.guicursor = ""
+vim.opt.guicursor = "n-v-c:block-blinkon500-blinkoff500"
 
 vim.opt.nu = true
 vim.opt.relativenumber = true
@@ -20,6 +20,7 @@ vim.opt.undofile = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 
+-- termguicolors is now enabled by default in Nvim 0.11 when supported
 vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 8
@@ -52,4 +53,3 @@ vim.opt.list = false
 --     extends = '⟩',
 --     precedes = '⟨'
 -- }
-

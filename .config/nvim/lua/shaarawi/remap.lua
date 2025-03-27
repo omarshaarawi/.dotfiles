@@ -84,3 +84,7 @@ vim.keymap.set(
     "<leader>ee",
     "oif err != nil {<CR>}<Esc>Oreturn err<Esc>"
 )
+
+-- Help file navigation - Neovim 0.11 features
+-- Note: In help files, use g== to execute code examples under cursor
+vim.keymap.set("n", "<leader>hf", ":help ", { desc = "Open help" })

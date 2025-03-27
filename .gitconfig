@@ -39,7 +39,6 @@
 	autosetuprebase = always
 	sort = -committerdate
 [merge]
-	conflictStyle = zdiff3
 [pager]
 	difftool = true
 [rebase]
@@ -54,7 +53,7 @@
 	ui = auto
 
 [merge]
-    conflictstyle = diff3
+	conflictstyle = merge
 
 [diff]
     colorMoved = default

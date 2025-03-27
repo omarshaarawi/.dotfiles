@@ -60,75 +60,97 @@ return {
                 "cssls",   -- CSS
                 "bashls",  -- Bash
             },
-            handlers = {
-                function(server_name) -- default handler (optional)
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities
+        })
+
+        -- Set up handlers for LSP servers
+        local lspconfig = require('lspconfig')
+
+        -- Set up Lua LSP
+        lspconfig.lua_ls.setup({
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    runtime = { version = "Lua 5.1" },
+                    diagnostics = {
+                        globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
                     }
-                end,
-                templ = function()
-                    require 'lspconfig'.templ.setup({
-                        version = '0.2.476',
-                        cmd = { 'templ', 'lsp' },
-                        cmd_env = { TEMPL_EXPERIMENT = 'rawgo', TEST = "false" },
-                    })
-                end,
-                html = function()
-                    require 'lspconfig'.html.setup({
-                        filetypes = { 'html', 'templ' },
-                        capabilities = capabilities,
-                    })
-                end,
-                htmx = function()
-                    require 'lspconfig'.htmx.setup({
-                        filetypes = { 'html', 'templ' },
-                        capabilities = capabilities,
-                    })
-                end,
-                tailwindcss = function()
-                    require 'lspconfig'.tailwindcss.setup({
-                        filetypes = { "templ", "astro", "javascript", "typescript", "react", "svelte" },
-                        settings = {
-                            tailwindCSS = {
-                                includeLanguages = {
-                                    templ = "html",
-                                },
-                            },
-                        },
-                    })
-                end,
-                zls = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.zls.setup({
-                        root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
-                        settings = {
-                            zls = {
-                                enable_inlay_hints = true,
-                                enable_snippets = true,
-                                warn_style = true,
-                            },
-                        },
-                    })
-                    vim.g.zig_fmt_parse_errors = 0
-                    vim.g.zig_fmt_autosave = 0
-                end,
-                ["lua_ls"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                runtime = { version = "Lua 5.1" },
-                                diagnostics = {
-                                    globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                }
-                            }
-                        }
-                    }
-                end,
+                }
             }
         })
 
+        -- Set up Go LSP
+        lspconfig.gopls.setup({
+            capabilities = capabilities,
+            cmd = { "gopls" },
+            filetypes = { "go", "gomod", "gowork", "gotmpl" },
+            settings = {
+                gopls = {
+                    completeUnimported = true,
+                    usePlaceholders = true,
+                    analyses = {
+                        unusedparams = true,
+                        shadow = true,
+                        nilness = true,
+                        unusedwrite = true,
+                        useany = true,
+                    },
+                    staticcheck = true,
+                    gofumpt = true,
+                    semanticTokens = true,
+                    codelenses = {
+                        gc_details = true,
+                        generate = true,
+                        regenerate_cgo = true,
+                        tidy = true,
+                        upgrade_dependency = true,
+                        vendor = true,
+                    },
+                    hints = {
+                        assignVariableTypes = true,
+                        compositeLiteralFields = true,
+                        compositeLiteralTypes = true,
+                        constantValues = true,
+                        functionTypeParameters = true,
+                        parameterNames = true,
+                        rangeVariableTypes = true,
+                    },
+                },
+            },
+            root_dir = lspconfig.util.root_pattern("go.mod", ".git"),
+        })
+
+        -- Setup for other language servers (using the default handler)
+        local servers = {
+            "rust_analyzer", "html", "htmx", "tailwindcss", "zls", "templ",
+            "pyright", "jsonls", "yamlls", "cssls", "bashls"
+        }
+        for _, server in ipairs(servers) do
+            lspconfig[server].setup({
+                capabilities = capabilities,
+            })
+        end
+
+        -- Configure diagnostics with new virtual lines (Neovim 0.11 feature)
+        vim.diagnostic.config({
+            -- Virtual text is disabled since we're using virtual lines
+            virtual_text = false,
+            -- Use the new virtual_lines feature in Neovim 0.11
+            virtual_lines = {
+                -- Only show virtual lines for the current line by default
+                -- Can be toggled with <leader>vl
+                current_line = true,
+            },
+            float = {
+                border = "rounded",
+                source = "always",
+            },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
+        })
+
+        -- Set up autocompletion
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
         cmp.setup({
@@ -183,8 +205,6 @@ return {
                 -- Environment-specific sources
                 if is_work_machine() then
                     table.insert(sources, { name = 'copilot' })
-                else
-                    table.insert(sources, { name = 'supermaven' })
                 end
 
                 -- Base sources that are always included
@@ -214,7 +234,6 @@ return {
                     -- Set a name for each source
                     vim_item.menu = ({
                         copilot = "[CP]",
-                        supermaven = "[SM]",
                         nvim_lsp = "[LSP]",
                         luasnip = "[Snippet]",
                         buffer = "[Buffer]",
@@ -225,6 +244,10 @@ return {
                     })[entry.source.name]
                     return vim_item
                 end
+            },
+            -- Enable fuzzy completion (new in Neovim 0.11)
+            completion = {
+                completeopt = "menu,menuone,noinsert"
             },
         })
 
@@ -255,7 +278,13 @@ return {
             })
         })
 
-        -- Setup lspconfig.
+        -- Set up fuzzy completion in completeopt (Neovim 0.11 feature)
+        vim.opt.completeopt:append("fuzzy")
+
+        -- Go-specific configuration
+        local go_group = vim.api.nvim_create_augroup('GoConfiguration', { clear = true })
+
+        -- Set up format on save
         local format_group = vim.api.nvim_create_augroup("LspFormatting", {})
         vim.api.nvim_create_autocmd("BufWritePre", {
             group = format_group,
@@ -266,28 +295,103 @@ return {
         -- Enable inlay hints if supported
         if vim.lsp.inlay_hint then
             vim.keymap.set("n", "<leader>ih", function()
-                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+                local enabled = vim.lsp.inlay_hint.is_enabled()
+                vim.lsp.inlay_hint.enable(not enabled)
             end, { desc = "Toggle Inlay Hints" })
         end
 
-        vim.diagnostic.config({
-            virtual_text = {
-                prefix = '●', -- Could be '■', '▎', 'x'
-                source = "if_many",
-            },
-            float = {
-                focusable = false,
-                style = "minimal",
-                border = "rounded",
-                source = "always",
-                header = "",
-                prefix = "",
-            },
-            signs = true,
-            underline = true,
-            update_in_insert = false,
-            severity_sort = true,
+        -- Setup auto-completion from LSP (Neovim 0.11 feature)
+        vim.api.nvim_create_autocmd('LspAttach', {
+            callback = function(ev)
+                local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                
+                -- Enable inlay hints for any language that supports it
+                if client and client:supports_method('textDocument/inlayHint') and vim.lsp.inlay_hint then
+                    vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+                end
+            end,
         })
+
+        -- Set up Go-specific keymappings on LSP attach for Go files
+        vim.api.nvim_create_autocmd('LspAttach', {
+            group = go_group,
+            callback = function(ev)
+                -- Check if the attached buffer is a Go file and the client is gopls
+                local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                if not client or client.name ~= "gopls" then return end
+
+                local bufnr = ev.buf
+                local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+                if filetype ~= 'go' then return end
+
+                local opts = { buffer = bufnr, silent = true }
+
+                -- Go-specific keymappings
+                vim.keymap.set('n', '<leader>gfs', function()
+                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } } })
+                end, vim.tbl_extend('force', opts, { desc = 'Organize Imports' }))
+
+                vim.keymap.set('n', '<leader>gt', function()
+                    vim.cmd('split | terminal go test ./...')
+                end, vim.tbl_extend('force', opts, { desc = 'Run Go tests' }))
+
+                vim.keymap.set('n', '<leader>gtf', function()
+                    vim.cmd('split | terminal go test -v ' .. vim.fn.expand('%:p:h'))
+                end, vim.tbl_extend('force', opts, { desc = 'Run Go tests in current file dir' }))
+
+                vim.keymap.set('n', '<leader>gr', function()
+                    vim.cmd('split | terminal go run .')
+                end, vim.tbl_extend('force', opts, { desc = 'Run Go program' }))
+
+                -- Toggle inlay hints for Go files
+                if vim.lsp.inlay_hint then
+                    -- Enable inlay hints by default for Go files
+                    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+                end
+            end,
+        })
+
+        -- Add keybindings to toggle diagnostic display
+        vim.keymap.set("n", "<leader>vl", function()
+            local config = vim.diagnostic.config()
+            local current_line_only = config.virtual_lines and config.virtual_lines.current_line == true
+
+            vim.diagnostic.config({
+                virtual_lines = {
+                    current_line = not current_line_only
+                }
+            })
+
+            vim.notify(
+                "Virtual lines: " .. (not current_line_only and "current line only" or "all lines"),
+                vim.log.levels.INFO
+            )
+        end, { desc = "Toggle diagnostic virtual lines" })
+
+        -- Keybinding to switch between virtual_text and virtual_lines
+        vim.keymap.set("n", "<leader>vt", function()
+            local config = vim.diagnostic.config()
+            local using_virtual_lines = config.virtual_lines ~= nil
+
+            if using_virtual_lines then
+                vim.diagnostic.config({
+                    virtual_lines = nil,
+                    virtual_text = {
+                        prefix = '●',
+                        source = "if_many",
+                    }
+                })
+                vim.notify("Using virtual text for diagnostics", vim.log.levels.INFO)
+            else
+                vim.diagnostic.config({
+                    virtual_text = false,
+                    virtual_lines = {
+                        current_line = true
+                    }
+                })
+                vim.notify("Using virtual lines for diagnostics", vim.log.levels.INFO)
+            end
+        end, { desc = "Toggle between virtual text and virtual lines" })
 
         -- Change diagnostic symbols in the sign column
         local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
@@ -295,5 +399,8 @@ return {
             local hl = "DiagnosticSign" .. type
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
         end
+
+        -- Add rounded borders to hover windows (since the global handler override no longer works in 0.11)
+        vim.o.winborder = "rounded"
     end
 }

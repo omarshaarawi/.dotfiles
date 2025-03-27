@@ -38,6 +38,8 @@ alias rm="rm -i"
 alias cdd='cd "$HOME/Documents"'
 alias history="history 1"
 
+alias ghe='GH_HOST=git.target.com gh'
+
 stty -ixon
 setopt INTERACTIVE_COMMENTS
 setopt APPEND_HISTORY

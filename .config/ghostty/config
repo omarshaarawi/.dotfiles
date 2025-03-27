@@ -34,8 +34,7 @@ split-divider-color = #444444
 
 theme = Kanagawa Dragon
 
-minimum-contrast = 1.2
-background-opacity = 0.95
+background-opacity = 0.9
 background-blur = 20
 
 shell-integration = zsh
