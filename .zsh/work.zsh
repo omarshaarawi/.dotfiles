@@ -4,6 +4,8 @@ path=(
     "/usr/local/sbin"
     "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
     "/Applications/IntelliJ IDEA.app/Contents/MacOS"
+    "/Users/Z0044BF/git/vessel/tools/bin"
+    "/Users/Z0044BF/.dotnet/tools"
     $path
 )
 export VAULT_ADDR=https://prod.vault.target.com:443
@@ -155,4 +157,12 @@ k8s_restart_reason() {
     fi
 }
 
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/Z0044BF/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/Z0044BF/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/Z0044BF/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/Z0044BF/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
 [[ -z "$KUBECTL_BINARY" ]] && export KUBECTL_BINARY="$HOME/.kubectl-versions/kubectl-latest"
+source <(storectl zsh-alias)
+

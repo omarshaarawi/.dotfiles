@@ -5,6 +5,7 @@ path=(
     "/usr/local/go/bin"
     "/opt/homebrew/bin"
     "/usr/local/bin"
+    "$HOME/.rvm/bin"
     $path
 )
 export GITHUB_USERNAME="omarshaarawi"

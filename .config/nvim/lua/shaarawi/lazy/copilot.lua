@@ -5,7 +5,7 @@ return {
             local file = io.open(os.getenv("HOME") .. "/.is_work_machine")
             if file then
                 file:close()
-                return true
+                return false
             end
             return false
         end,
