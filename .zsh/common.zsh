@@ -4,6 +4,7 @@ path=(
     "$HOME/bin"
     "$HOME/.local/bin"
     "$HOME/.scripts"
+    "$HOME/.rvm/bin"
     $path
 )
 export EDITOR="nvim"
@@ -82,6 +83,9 @@ bindkey "^@" fzf-file-widget
 # >>> load ZSH plugin
 source "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# Hindsight shell history
+source /Users/Shaarawi/git/hindsight/shell/hindsight.zsh
 
 typeset -A configs
 configs=(

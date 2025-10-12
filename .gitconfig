@@ -72,8 +72,8 @@
 	stat = !git diff --stat $(git merge-base HEAD main)
 	fpush = push --force-with-lease
 [credential "https://github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/opt/homebrew/bin/gh auth git-credential

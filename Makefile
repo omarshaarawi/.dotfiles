@@ -19,11 +19,23 @@ all: stow
 
 stow: backup
 	@echo "Stowing dotfiles..."
-	@$(STOW) $(STOW_FLAGS)
+	@$(STOW) $(STOW_FLAGS) $(STOW_DIRS)
+	@for file in $(STOW_FILES); do \
+		ln -sf $(PWD)/$$file $(HOME)/$$file; \
+	done
+	@for dir in $(CONFIG_DIRS); do \
+		ln -sf $(PWD)/.config/$$dir $(HOME)/.config/$$dir; \
+	done
 
 unstow:
 	@echo "Unstowing dotfiles..."
-	@$(STOW) -D $(STOW_FLAGS)
+	@$(STOW) -D $(STOW_FLAGS) $(STOW_DIRS)
+	@for file in $(STOW_FILES); do \
+		rm -f $(HOME)/$$file; \
+	done
+	@for dir in $(CONFIG_DIRS); do \
+		rm -f $(HOME)/.config/$$dir; \
+	done
 
 restow: unstow stow
 
