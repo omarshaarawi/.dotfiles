@@ -19,15 +19,30 @@ link:
     set -euo pipefail
     mkdir -p "$HOME/.config"
     for f in {{home_files}}; do
-        ln -sfn "{{dotfiles}}/$f" "$HOME/$f"
+        target="$HOME/$f"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP $f (real file exists, back it up or remove it first)"
+            continue
+        fi
+        ln -sfn "{{dotfiles}}/$f" "$target"
         echo "  $f -> {{dotfiles}}/$f"
     done
     for d in {{home_dirs}}; do
-        ln -sfn "{{dotfiles}}/$d" "$HOME/$d"
+        target="$HOME/$d"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP $d (real dir exists, back it up or remove it first)"
+            continue
+        fi
+        ln -sfn "{{dotfiles}}/$d" "$target"
         echo "  $d -> {{dotfiles}}/$d"
     done
     for d in {{config_dirs}}; do
-        ln -sfn "{{dotfiles}}/.config/$d" "$HOME/.config/$d"
+        target="$HOME/.config/$d"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP .config/$d (real dir exists, back it up or remove it first)"
+            continue
+        fi
+        ln -sfn "{{dotfiles}}/.config/$d" "$target"
         echo "  .config/$d -> {{dotfiles}}/.config/$d"
     done
     echo "done."
@@ -84,8 +99,14 @@ check:
 
 # mark this as a work machine (sources .zsh/work.zsh instead of personal.zsh)
 set-work:
+    #!/usr/bin/env bash
+    set -euo pipefail
     touch ~/.is_work_machine
-    @echo "this machine is now set to work. restart your shell."
+    if [ ! -f "{{dotfiles}}/.zsh/work.zsh" ]; then
+        cp "{{dotfiles}}/.zsh/work.zsh.example" "{{dotfiles}}/.zsh/work.zsh"
+        echo "created .zsh/work.zsh from template, edit it with your work config."
+    fi
+    echo "this machine is now set to work. restart your shell."
 
 # mark this as a personal machine
 set-personal:
@@ -94,8 +115,13 @@ set-personal:
 
 # full setup for a fresh machine
 setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "initializing submodules..."
+    git -C "{{dotfiles}}" submodule update --init --recursive
+    echo ""
     just link
-    @echo ""
-    @echo "next steps:"
-    @echo "  - run 'just set-work' or 'just set-personal'"
-    @echo "  - restart your shell"
+    echo ""
+    echo "next steps:"
+    echo "  - run 'just set-work' or 'just set-personal'"
+    echo "  - restart your shell"
