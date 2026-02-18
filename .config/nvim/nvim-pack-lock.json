@@ -1,7 +1,7 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "ddeab4c",
+      "rev": "820f1dd",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "friendly-snippets": {
@@ -9,7 +9,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "1ee5c1f",
+      "rev": "abf82a6",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "harpoon": {
@@ -17,7 +17,7 @@
       "src": "https://github.com/ThePrimeagen/harpoon"
     },
     "mini.nvim": {
-      "rev": "1858276",
+      "rev": "c163117",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
     },
     "nvim-treesitter": {
@@ -25,7 +25,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "oil.nvim": {
-      "rev": "919e155",
+      "rev": "f55b25e",
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "plenary.nvim": {
@@ -33,23 +33,23 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "telescope-fzf-native.nvim": {
-      "rev": "1f08ed6",
+      "rev": "6fea601",
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
     },
     "telescope.nvim": {
-      "rev": "b4da76b",
+      "rev": "0d8b6ea",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "trouble.nvim": {
-      "rev": "c098362",
+      "rev": "bd67efe",
       "src": "https://github.com/folke/trouble.nvim"
     },
     "undotree": {
-      "rev": "0f1c981",
+      "rev": "178d19e",
       "src": "https://github.com/mbbill/undotree"
     },
     "vague.nvim": {
-      "rev": "cdbfdc8",
+      "rev": "fcc2835",
       "src": "https://github.com/vague-theme/vague.nvim"
     },
     "vim-fugitive": {

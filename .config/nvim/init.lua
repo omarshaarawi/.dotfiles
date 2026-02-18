@@ -31,7 +31,6 @@ vim.pack.add({
     "https://github.com/tpope/vim-fugitive",
 
     -- Navigation & workflow
-    "https://github.com/ThePrimeagen/harpoon",
     "https://github.com/mbbill/undotree",
     "https://github.com/folke/trouble.nvim",
 
@@ -47,12 +46,25 @@ vim.pack.add({
 
 -- Plugin Configurations
 
--- Treesitter
-require('nvim-treesitter.configs').setup {
-    ensure_installed = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline" },
-    highlight = { enable = true },
-    indent = { enable = true },
-}
+-- Treesitter (new API - nvim-treesitter main branch rewrite)
+-- Install parsers with :TSInstall <lang> or programmatically below
+-- Highlighting/indent now uses Neovim's built-in treesitter support
+local ts_langs = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline", "elixir", "heex" }
+
+-- Auto-install parsers (async, won't block startup)
+vim.api.nvim_create_autocmd("VimEnter", {
+    once = true,
+    callback = function()
+        require('nvim-treesitter').install(ts_langs)
+    end,
+})
+
+-- Enable treesitter highlighting and indent for all filetypes
+vim.api.nvim_create_autocmd("FileType", {
+    callback = function()
+        pcall(vim.treesitter.start)
+    end,
+})
 
 -- Telescope
 local telescope = require('telescope')
@@ -74,6 +86,8 @@ telescope.setup {
         }
     }
 }
+
+pcall(telescope.load_extension, 'fzf')
 
 local builtin = require('telescope.builtin')
 -- File finding
@@ -155,16 +169,17 @@ require('gitsigns').setup {
     end
 }
 
--- Harpoon
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-
-vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Harpoon: Add file" })
-vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu, { desc = "Harpoon: Toggle menu" })
-vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end, { desc = "Harpoon: File 1" })
-vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end, { desc = "Harpoon: File 2" })
-vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end, { desc = "Harpoon: File 3" })
-vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end, { desc = "Harpoon: File 4" })
+-- Harpoon 2
+-- local harpoon = require("harpoon")
+-- harpoon:setup()
+--
+-- vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon: Add file" })
+-- vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
+--     { desc = "Harpoon: Toggle menu" })
+-- vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end, { desc = "Harpoon: File 1" })
+-- vim.keymap.set("n", "<C-t>", function() harpoon:list():select(2) end, { desc = "Harpoon: File 2" })
+-- vim.keymap.set("n", "<C-n>", function() harpoon:list():select(3) end, { desc = "Harpoon: File 3" })
+-- vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end, { desc = "Harpoon: File 4" })
 
 -- Undotree (old-style plugin, no setup needed)
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" })
@@ -213,7 +228,6 @@ end, { desc = "Next trouble/quickfix item" })
 require('blink.cmp').setup({
     keymap = { preset = 'default' },
     appearance = {
-        use_nvim_cmp_as_default = true,
         nerd_font_variant = 'mono'
     },
     signature = { enabled = true },
@@ -221,44 +235,6 @@ require('blink.cmp').setup({
 
 -- Mini
 require("mini.pairs").setup()
-
-local miniclue = require('mini.clue')
-miniclue.setup({
-    triggers = {
-        -- Leader triggers
-        { mode = 'n', keys = '<Leader>' },
-        { mode = 'x', keys = '<Leader>' },
-
-        -- Built-in completion
-        { mode = 'i', keys = '<C-x>' },
-
-        -- `g` key
-        { mode = 'n', keys = 'g' },
-        { mode = 'x', keys = 'g' },
-
-        -- Registers
-        { mode = 'n', keys = '"' },
-        { mode = 'x', keys = '"' },
-        { mode = 'i', keys = '<C-r>' },
-        { mode = 'c', keys = '<C-r>' },
-
-        -- Window commands
-        { mode = 'n', keys = '<C-w>' },
-
-        -- `z` key
-        { mode = 'n', keys = 'z' },
-        { mode = 'x', keys = 'z' },
-    },
-
-    clues = {
-        miniclue.gen_clues.builtin_completion(),
-        miniclue.gen_clues.g(),
-        miniclue.gen_clues.marks(),
-        miniclue.gen_clues.registers(),
-        miniclue.gen_clues.windows(),
-        miniclue.gen_clues.z(),
-    },
-})
 
 -- Theme
 require("vague").setup({

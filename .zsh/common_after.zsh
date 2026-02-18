@@ -1,11 +1,7 @@
 # Load syntax highlighting if available (for work environment)
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-cargo() {
-    unset -f cargo
-    source "$HOME/.cargo/env"
-    cargo "$@"
-}
+source "$HOME/.cargo/env"
 
 sdk() {
     unset -f sdk

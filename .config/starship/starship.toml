@@ -5,14 +5,15 @@ $jobs\
 $hostname\
 $directory\
 $fill\
-$git_branch\
-$git_status\
-$git_commit\
-$git_state\
+${custom.jj}\
 $line_break\
 $character
 """
 
+# $git_branch\
+#         $git_status\
+#         $git_commit\
+#         $git_state\
 [jobs]
 symbol = " "
 style = "bold #54546D"  # Darker muted color from Kanagawa
@@ -83,4 +84,20 @@ style = "bold #7AA89F"  # Kanagawa cyan/teal
 disabled = false
 format = "[\\($symbol$context\\)]($style) "
 style = "bold #7E9CD8"  # Kanagawa blue
+
+
+
+#[custom.jj]
+#command = "prompt"
+#format = "$output"
+#ignore_timeout = true
+#shell = ["starship-jj", "--ignore-working-copy", "starship"]
+#use_stdin = false
+#when = true
+
+[custom.jj]
+command = "jj-starship"
+detect_folders = [".jj", ".git"]
+shell = ["sh"]
+format = "$output "
 

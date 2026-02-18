@@ -11,6 +11,7 @@ local servers = {
     'cssls',
     'docker_compose_language_service',
     'dockerls',
+    'elixirls',
     'golangci_lint_ls',
     'gopls',
     'html',
@@ -23,6 +24,7 @@ local servers = {
     'ts_ls',
     'yamlls',
     'zls',
+    'swiftls',
 }
 
 -- Enable each LSP server
