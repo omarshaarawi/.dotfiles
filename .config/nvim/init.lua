@@ -42,6 +42,10 @@ vim.pack.add({
 
     -- autocomplete
     "https://github.com/saghen/blink.cmp",
+
+    -- Markdown
+    "https://github.com/iamcco/markdown-preview.nvim",
+    "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 }, { load = true })
 
 -- Plugin Configurations
@@ -241,6 +245,24 @@ require("vague").setup({
     transparent = true,
 })
 vim.cmd("colorscheme vague")
+
+-- Markdown Preview (browser-based)
+vim.g.mkdp_auto_close = 1
+vim.g.mkdp_theme = "dark"
+
+-- Render Markdown (in-buffer rendering)
+require('render-markdown').setup({
+    heading = {
+        enabled = true,
+        sign = false,
+    },
+    code = {
+        enabled = true,
+        sign = false,
+        style = "full",
+        border = "thin",
+    },
+})
 
 
 -- Notes

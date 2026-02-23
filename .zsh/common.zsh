@@ -10,7 +10,6 @@ path=(
 export EDITOR="nvim"
 export DEFAULT_USER="$(whoami)"
 export XDG_CONFIG_HOME="$HOME/.config"
-export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 # fzf parameters used in all widgets - configure layout and wrapped the preview results (useful in large command rendering)
 export FZF_DEFAULT_OPTS="--height 100% --layout reverse --preview-window=wrap"
@@ -28,11 +27,10 @@ export FZF_CTRL_T_OPTS="--preview '[ -d {} ] && tree -C {} || bat --color=always
 # Aliases
 alias vim='nvim'
 alias vi='nvim'
-alias tn="tmux new -s"
-alias ta="tmux attach -t"
-alias tl="tmux list-sessions"
-alias tk="tmux kill-session -t"
-alias tmux2clip='tmux capture-pane -pS - | clipwrite'
+alias za="zmx attach"
+alias zl="zmx list"
+alias zk="zmx kill"
+alias zd="zmx detach"
 
 alias ll="ls -larht"
 alias rm="rm -i"
@@ -93,7 +91,6 @@ configs=(
     [wezterm]="$HOME/.wezterm.lua"
     [ssh]="$HOME/.ssh/config"
     [zsh]="$HOME/.zshrc"
-    [tmux]="$XDG_CONFIG_HOME/tmux/tmux.conf"
     [zellij]="$XDG_CONFIG_HOME/zellij/config.kdl"
     [ghostty]="$XDG_CONFIG_HOME/ghostty/config"
     [starship]="$STARSHIP_CONFIG"
@@ -102,9 +99,6 @@ for key value in ${(kv)configs}; do
     if [[ $key == "zsh" ]]
     then
         alias ${key}config="vi $value && source $value && echo '$value has been sourced'"
-    elif [[ $key == "tmux" ]]
-    then
-        alias ${key}config="vi $value && tmux source-file $value && echo '$value has been sourced'"
     else
         alias ${key}config="vi $value"
     fi
@@ -117,37 +111,50 @@ tmp() {
     rm $file
 }
 
+# Set zmx session prefix from git root or cwd
+zmx_update_prefix() {
+    local root
+    root=$(git rev-parse --show-toplevel 2>/dev/null)
+    export ZMX_SESSION_PREFIX="$(basename "${root:-$PWD}")-"
+}
+
 function gp() {
     local dir
     dir=$(find ~/git ~/git/vessel ~/ -mindepth 1 -maxdepth 1 -type d | fzf)
     if [[ -n $dir ]]; then
         cd "$dir"
-        # Clear screen for clean slate
+        zmx_update_prefix
         clear
     fi
 }
 
+# Launch nvim + ai + terminal as zmx sessions for the current project
+# usage: nic [dir] [-a claude|opencode]
+nic() {
+    local dir="$(pwd)"
+    local agent="claude"
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -a) agent="$2"; shift 2 ;;
+            *)  dir="$1"; shift ;;
+        esac
+    done
+
+    local name
+    name=$(basename "$dir")
+
+    zmx run "${name}-nvim" "cd $dir && nvim; exec zsh" 2>/dev/null
+    zmx run "${name}-ai" "cd $dir && $agent; exec zsh" 2>/dev/null
+    zmx run "${name}-term" "cd $dir && exec zsh" 2>/dev/null
+
+    export ZMX_SESSION_PREFIX="${name}-"
+
+    echo "zmx sessions:"
+    zmx list
+    echo ""
+    echo "attach: za nvim | za ai | za term"
+}
 
 
-# tmux_auto() {
-#     [[ $- != *i* ]] && return
-#     if [[ -z "$TMUX" ]] && command -v tmux &> /dev/null; then
-#         tmux attach 2>/dev/null
-#         if [[ $? -ne 0 ]]; then
-#             if tmux ls 2>/dev/null | grep -v attached &>/dev/null; then
-#                 echo "Detached sessions exist. Attach? (y/n)"
-#                 read -r response
-#                 if [[ "$response" =~ ^[Yy]$ ]]; then
-#                     exec tmux attach
-#                 else
-#                     exec tmux new-session
-#                 fi
-#             else
-#                 exec tmux new-session
-#             fi
-#         fi
-#     fi
-# }
-#
-#
-# tmux_auto
+eval "$(zmx completions zsh)"

@@ -16,6 +16,10 @@
       "rev": "1bc17e3",
       "src": "https://github.com/ThePrimeagen/harpoon"
     },
+    "markdown-preview.nvim": {
+      "rev": "a923f5f",
+      "src": "https://github.com/iamcco/markdown-preview.nvim"
+    },
     "mini.nvim": {
       "rev": "c163117",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
@@ -31,6 +35,10 @@
     "plenary.nvim": {
       "rev": "b9fd522",
       "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "render-markdown.nvim": {
+      "rev": "1c95813",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "telescope-fzf-native.nvim": {
       "rev": "6fea601",
