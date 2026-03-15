@@ -44,7 +44,7 @@ open = ["log", "-r", "open()"]
 retrunk = ["rebase", "-d", "trunk()"]
 
 # rebase the current stack onto updated trunk
-reheat = ["rebase", "-d", "trunk()", "-s", "all:roots(trunk()..stack(@))"]
+reheat = ["rebase", "-d", "trunk()", "-s", "roots(trunk()..stack(@))"]
 
 # move content from any change into @: jj consume <rev> [paths]
 consume = ["squash", "--into", "@", "--from"]

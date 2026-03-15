@@ -180,7 +180,7 @@ jj rebase -b <change-id> -d main
 Or rebase all open work at once:
 
 ```bash
-jj retrunk -s 'all:roots(open())'
+jj retrunk -s 'roots(open())'
 ```
 
 ### After PR is merged

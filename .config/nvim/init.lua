@@ -67,7 +67,7 @@ vim.pack.add({
 -- Treesitter (new API - nvim-treesitter main branch rewrite)
 -- Install parsers with :TSInstall <lang> or programmatically below
 -- Highlighting/indent now uses Neovim's built-in treesitter support
-local ts_langs = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline", "elixir", "heex" }
+local ts_langs = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline", "elixir", "heex", "svelte", "html", "yaml" }
 
 -- Auto-install parsers (async, won't block startup)
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -276,6 +276,7 @@ require('render-markdown').setup({
         style = "full",
         border = "thin",
     },
+    latex = { enabled = false },
 })
 
 
