@@ -8,11 +8,52 @@ email = "omar25shaarawi@gmail.com"
 default-command = "log"
 diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
 diff-instructions = false
+log-synthetic-elided-nodes = true
+graph.style = "square"
+
+[git]
+auto-local-bookmark = false
+push-bookmark-prefix = "push-"
+
+[snapshot]
+auto-update-stale = true
+
+[revsets]
+log = 'stack(mine() | @) | trunk() | @'
 
 [revset-aliases]
-'closest_bookmark(to)' = 'heads(::to & bookmarks())'
-'closest_pushable(to)' = 'heads(::to & ~description(exact:"") & (~empty() | merges()))'
+# stack: mutable commits reachable from x, with n ancestor levels
+'stack()' = 'stack(@)'
+'stack(x)' = 'stack(x, 2)'
+'stack(x, n)' = 'ancestors(reachable(x, mutable()), n)'
+
+# all open work: stacks reachable from @ or anything you wrote
+'open()' = 'stack(mine() | @, 1)'
 
 [aliases]
-tug = ["bookmark", "move", "--from", "closest_bookmark(@)", "--to", "closest_pushable(@)"]
+# start new work on trunk
+nt = ["new", "trunk()"]
 
+# move closest bookmark to parent (for trunk-based push after jj new)
+tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+
+# list all open stacks of work
+open = ["log", "-r", "open()"]
+
+# rebase arbitrary revisions onto trunk: jj retrunk -s <rev>
+retrunk = ["rebase", "-d", "trunk()"]
+
+# rebase the current stack onto updated trunk
+reheat = ["rebase", "-d", "trunk()", "-s", "all:roots(trunk()..stack(@))"]
+
+# move content from any change into @: jj consume <rev> [paths]
+consume = ["squash", "--into", "@", "--from"]
+
+# move content from @ into any change: jj eject <rev> [--interactive]
+eject = ["squash", "--from", "@", "--into"]
+
+# detailed view of a revision: jj examine <rev>
+examine = ["log", "-T", "builtin_log_detailed", "-p", "-r"]
+
+[template-aliases]
+'format_short_id(id)' = 'id.shortest()'
