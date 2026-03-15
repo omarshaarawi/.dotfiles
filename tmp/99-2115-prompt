@@ -1,3 +1,14 @@
+<Context>
+You receive a selection in neovim that you need to replace with new code.
+The selection's contents may contain notes, incorporate the notes every time if there are some.
+consider the context of the selection and what you are suppose to be implementing
+<SELECTION_LOCATION>
+range(point(314,1),point(314,1))
+</SELECTION_LOCATION>
+<SELECTION_CONTENT>
+
+</SELECTION_CONTENT>
+<FILE_CONTAINING_SELECTION>
 -- Neovim Configuration
 -- Using vim.pack.add() (built-in plugin manager) and vim.lsp.config()
 
@@ -294,7 +305,6 @@ local _99 = require("99")
 local cwd = vim.uv.cwd()
 local basename = vim.fs.basename(cwd)
 _99.setup({
-    model = "anthropic/claude-sonnet-4-6",
     logger = {
         level = _99.DEBUG,
         path = "/tmp/" .. basename .. ".99.debug",
@@ -337,9 +347,31 @@ vim.keymap.set("n", "<leader>os", "<cmd>Octo search<CR>", { desc = "Octo: search
 
 -- Hunk.nvim (jj diff editor)
 require("hunk").setup()
+
 -- Notes
 --
 -- Update all plugins: :lua vim.pack.update()
 -- See installed plugins: :lua =vim.pack.get()
 --
 -- LSP configurations in lsp/*.lua are automatically loaded by config/lsp.lua
+</FILE_CONTAINING_SELECTION>
+
+</Context>
+<Prompt>
+add a commeent
+</Prompt>
+
+<Location><File>/Users/Shaarawi/.dotfiles/.config/nvim/init.lua</File><Function>range(point(314,1),point(314,1))</Function></Location>
+<FunctionText></FunctionText>
+<TEMP_FILE>./tmp/99-2115</TEMP_FILE>
+<MustObey>
+NEVER alter any file other than TEMP_FILE.
+never provide the requested changes as conversational output. Return only the code.
+ONLY provide requested changes by writing the change to TEMP_FILE
+
+never attempt to read TEMP_FILE.
+It is purely for output.
+Previous contents, which may not exist, can be written over without worry
+After writing TEMP_FILE once you should be done.  Be done and end the session.
+
+</MustObey>

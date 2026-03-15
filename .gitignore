@@ -3,3 +3,4 @@ lazy-lock.json
 .zsh/cly.zsh
 .zsh/work.zsh
 .config/nvim/nvim-macos-arm64/
+tmp/
