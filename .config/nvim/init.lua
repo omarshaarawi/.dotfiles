@@ -42,6 +42,20 @@ vim.pack.add({
 
     -- autocomplete
     "https://github.com/saghen/blink.cmp",
+    "https://github.com/saghen/blink.compat",
+
+    -- AI
+    "https://github.com/supermaven-inc/supermaven-nvim",
+    "https://github.com/ThePrimeagen/99",
+
+    -- Diff & PR review
+    "https://github.com/sindrets/diffview.nvim",
+    "https://github.com/pwntester/octo.nvim",
+    "https://github.com/nvim-tree/nvim-web-devicons",
+
+    -- jj diff editor
+    "https://github.com/MunifTanjim/nui.nvim",
+    "https://github.com/julienvincent/hunk.nvim",
 
     -- Markdown
     "https://github.com/iamcco/markdown-preview.nvim",
@@ -264,6 +278,64 @@ require('render-markdown').setup({
     },
 })
 
+
+-- Supermaven (inline completions)
+require("supermaven-nvim").setup({
+    keymaps = {
+        accept_suggestion = "<Tab>",
+        clear_suggestion = "<C-]>",
+        accept_word = "<C-j>",
+    },
+    log_level = "off",
+})
+
+-- 99 (AI agent)
+local _99 = require("99")
+local cwd = vim.uv.cwd()
+local basename = vim.fs.basename(cwd)
+_99.setup({
+    logger = {
+        level = _99.DEBUG,
+        path = "/tmp/" .. basename .. ".99.debug",
+        print_on_error = true,
+    },
+    md_files = {
+        "AGENT.md",
+        "CLAUDE.md",
+    },
+    completion = {
+        source = "blink",
+    },
+})
+
+vim.keymap.set("v", "<leader>9v", function() _99.visual() end, { desc = "99: visual replace" })
+vim.keymap.set("n", "<leader>9x", function() _99.stop_all_requests() end, { desc = "99: stop all requests" })
+vim.keymap.set("n", "<leader>9s", function() _99.search() end, { desc = "99: search" })
+
+-- Diffview
+require("diffview").setup({
+    use_icons = true,
+})
+vim.keymap.set("n", "<leader>dv", "<cmd>DiffviewOpen<CR>", { desc = "Diffview: open" })
+vim.keymap.set("n", "<leader>dc", "<cmd>DiffviewClose<CR>", { desc = "Diffview: close" })
+vim.keymap.set("n", "<leader>dh", "<cmd>DiffviewFileHistory %<CR>", { desc = "Diffview: file history" })
+vim.keymap.set("n", "<leader>db", "<cmd>DiffviewFileHistory<CR>", { desc = "Diffview: branch history" })
+
+-- Octo (GitHub PR review)
+require("octo").setup({
+    picker = "telescope",
+    enable_builtin = true,
+    use_local_fs = true,
+    reviews = {
+        auto_show_threads = true,
+    },
+})
+vim.keymap.set("n", "<leader>op", "<cmd>Octo pr list<CR>", { desc = "Octo: list PRs" })
+vim.keymap.set("n", "<leader>oi", "<cmd>Octo issue list<CR>", { desc = "Octo: list issues" })
+vim.keymap.set("n", "<leader>os", "<cmd>Octo search<CR>", { desc = "Octo: search" })
+
+-- Hunk.nvim (jj diff editor)
+require("hunk").setup()
 
 -- Notes
 --
