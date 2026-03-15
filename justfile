@@ -9,6 +9,9 @@ home_dirs := ".zsh .scripts"
 # .config subdirectories to symlink
 config_dirs := "aerospace ghostty nvim starship tmux zellij zsh-plugins"
 
+# .config files to symlink (file-level, not directory-level)
+config_files := "jj/config.toml"
+
 # show available recipes
 default:
     @just --list
@@ -45,6 +48,15 @@ link:
         ln -sfn "{{dotfiles}}/.config/$d" "$target"
         echo "  .config/$d -> {{dotfiles}}/.config/$d"
     done
+    for f in {{config_files}}; do
+        target="$HOME/.config/$f"
+        mkdir -p "$(dirname "$target")"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            rm "$target"
+        fi
+        ln -sfn "{{dotfiles}}/.config/$f" "$target"
+        echo "  .config/$f -> {{dotfiles}}/.config/$f"
+    done
     echo "done."
 
 # remove all managed symlinks
@@ -59,6 +71,9 @@ unlink:
     done
     for d in {{config_dirs}}; do
         [ -L "$HOME/.config/$d" ] && rm "$HOME/.config/$d" && echo "  removed ~/.config/$d"
+    done
+    for f in {{config_files}}; do
+        [ -L "$HOME/.config/$f" ] && rm "$HOME/.config/$f" && echo "  removed ~/.config/$f"
     done
     echo "done."
 
@@ -90,6 +105,15 @@ check:
             ((ok++))
         else
             echo "  MISSING  ~/.config/$d"
+            ((bad++))
+        fi
+    done
+    for f in {{config_files}}; do
+        if [ -L "$HOME/.config/$f" ]; then
+            echo "  ok  ~/.config/$f"
+            ((ok++))
+        else
+            echo "  MISSING  ~/.config/$f"
             ((bad++))
         fi
     done
