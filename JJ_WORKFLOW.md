@@ -45,15 +45,26 @@ Either way, `@` is always your in-progress work.
 
 All aliases use `trunk()` which defaults to `main` or `master`. If
 your team uses a different branch as the starting point (e.g.
-`development`), override it in `~/.config/jj/config.toml`:
+`development`), override it globally or per-repo.
+
+**Global default** (applies to all repos) in `~/.config/jj/config.toml`:
 
 ```toml
 [revset-aliases]
-'trunk()' = 'development'
+'trunk()' = 'main'
 ```
 
+**Per-repo override** (for repos that differ), run from inside the repo:
+
+```bash
+jj config set --repo revset-aliases.'trunk()' 'development'
+```
+
+This writes to `.jj/repo/config.toml` and only affects that repo.
+Repos without a local override use the global default.
+
 Every alias (`nt`, `reheat`, `retrunk`, the default log) will then
-target that branch instead. No other changes needed.
+target the correct branch per repo. No other changes needed.
 
 ## Aliases
 
