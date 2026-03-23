@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Detect the remote's default branch and set jj's trunk() to match.
+# Run from inside a jj repo, or pass repo paths as arguments.
+#
+# Usage:
+#   jj-set-trunk                     # current dir
+#   jj-set-trunk ~/git/repo1 ~/git/repo2
+
+set -euo pipefail
+
+set_trunk() {
+    local dir="$1"
+
+    if [[ ! -d "$dir/.jj" ]]; then
+        echo "skip: $dir (not a jj repo)"
+        return 1
+    fi
+
+    local head_ref
+    head_ref=$(git -C "$dir" ls-remote --symref origin HEAD 2>/dev/null | head -1)
+
+    local branch
+    branch=$(echo "$head_ref" | awk '/^ref:/{sub("refs/heads/", "", $2); print $2}')
+
+    if [[ -z "$branch" ]]; then
+        echo "skip: $dir (couldn't detect remote HEAD)"
+        return 1
+    fi
+
+    (cd "$dir" && jj config set --repo 'revset-aliases."trunk()"' "$branch")
+    echo "done: $dir -> trunk() = $branch"
+}
+
+if [[ $# -eq 0 ]]; then
+    set_trunk "$(pwd)"
+else
+    for repo in "$@"; do
+        set_trunk "$repo"
+    done
+fi
