@@ -1,7 +1,4 @@
-# Load syntax highlighting if available (for work environment)
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-source "$HOME/.cargo/env"
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 
 sdk() {
     unset -f sdk
@@ -10,7 +7,5 @@ sdk() {
     sdk "$@"
 }
 
-#eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
-

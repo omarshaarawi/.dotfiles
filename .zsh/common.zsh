@@ -1,5 +1,5 @@
 # Common settings for both personal and work environments
- typeset -U path
+typeset -U path
 path=(
     "$HOME/bin"
     "$HOME/.local/bin"
@@ -18,7 +18,7 @@ export FZF_DEFAULT_OPTS="--height 100% --layout reverse --preview-window=wrap"
 export FZF_CTRL_R_OPTS="--preview 'echo {}'"
 
 # CTRL + T: set "fd-find" as search engine instead of "find" and exclude .git for the results
-export FZF_CTRL_T_COMMAND="fd --exclude .git --ignore-file $HOME/.my-custom-zsh/.fd-fzf-ignore"
+export FZF_CTRL_T_COMMAND="fd --exclude .git"
 
 # CTRL + T: put the file content if item select is a file, or put tree command output if item selected is directory
 export FZF_CTRL_T_OPTS="--preview '[ -d {} ] && tree -C {} || bat --color=always --style=numbers {}'"
@@ -36,8 +36,6 @@ alias ll="ls -larht"
 alias rm="rm -i"
 alias cdd='cd "$HOME/Documents"'
 alias history="history 1"
-
-alias ghe='GH_HOST=git.target.com gh'
 
 stty -ixon
 setopt INTERACTIVE_COMMENTS
@@ -78,12 +76,15 @@ bindkey "^[[3~" delete-char
 # fzf alias: CTRL + SPACE (gadget parameters configured in the FZF_CTRL_T_COMMAND environment variable)
 bindkey "^@" fzf-file-widget
 
-# >>> load ZSH plugin
-source "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# >>> load ZSH plugins
+[[ -f "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && \
+    source "$XDG_CONFIG_HOME/zsh-plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
+    source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Hindsight shell history
-source /Users/Shaarawi/git/hindsight/shell/hindsight.zsh
+[[ -f "$HOME/git/hindsight/shell/hindsight.zsh" ]] && \
+    source "$HOME/git/hindsight/shell/hindsight.zsh"
 
 typeset -A configs
 configs=(

@@ -7,4 +7,4 @@ path=(
     $path
 )
 
-PS1="%F{yellow}[WORK]%f $PS1"
+alias ghe='GH_HOST=git.target.com gh'

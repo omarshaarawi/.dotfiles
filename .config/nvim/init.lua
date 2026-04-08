@@ -89,10 +89,13 @@ local telescope = require('telescope')
 telescope.setup {
     pickers = {
         find_files = {
-            find_command = { 'rg', '--files', '--hidden', '--sortr=modified', '--glob', '!.git' },
+            find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--sortr=modified', '--glob', '!.git', '--glob', '!.jj', '--glob', '!node_modules' },
         },
-        git_files = {
-            find_command = { 'rg', '--files', '--hidden', '--sortr=modified', '--glob', '!.git' },
+        live_grep = {
+            additional_args = { '--hidden', '--no-ignore', '--glob', '!.git', '--glob', '!.jj', '--glob', '!node_modules' },
+        },
+        grep_string = {
+            additional_args = { '--hidden', '--no-ignore', '--glob', '!.git', '--glob', '!.jj', '--glob', '!node_modules' },
         },
     },
     defaults = {

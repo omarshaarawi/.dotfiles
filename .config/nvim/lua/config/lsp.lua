@@ -12,6 +12,7 @@ local servers = {
     'docker_compose_language_service',
     'dockerls',
     'elixirls',
+    'emmet_language_server',
     'golangci_lint_ls',
     'gopls',
     'html',

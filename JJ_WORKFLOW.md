@@ -81,6 +81,18 @@ These are configured in `~/.config/jj/config.toml`:
 | `jj eject`  | Move content from `@` into another change                 |
 | `jj examine`| Detailed view of any revision with diff                   |
 
+### Repo insights
+
+Shell pipelines wrapped via `jj util exec` so they work as jj aliases:
+
+| Alias           | What it tells you                                            |
+|-----------------|--------------------------------------------------------------|
+| `jj churn`      | Top 20 files changed in the last year (where work happens)   |
+| `jj authors`    | Commit counts per author on trunk (who built this)           |
+| `jj hotspots`   | Top 20 files touched by fix/bug commits (where bugs cluster) |
+| `jj velocity`   | Commits per month on trunk (accelerating or dying)           |
+| `jj firefights` | Revert/hotfix/rollback commits in the last year              |
+
 ## Personal repos (push to main)
 
 For dotfiles, side projects, anything where you own main.

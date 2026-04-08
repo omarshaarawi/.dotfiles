@@ -1,4 +1,4 @@
-auto-update-channel = tip
+.auto-update-channel = tip
 font-family = "Berkeley Mono"
 font-family-bold = "Berkeley Mono"
 font-family-italic = "Berkeley Mono"
@@ -7,6 +7,7 @@ font-feature = "-calt,-dlig,-liga"
 font-size = 16
 font-synthetic-style = bold,italic,bold-italic
 alpha-blending = native
+keybind = super+shift+a=agent:toggle
 
 cursor-style = block
 cursor-color = #ffffff
