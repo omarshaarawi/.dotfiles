@@ -37,3 +37,6 @@ export DATADOG_MCP_TOKEN="Bearer $(node -e "process.stdout.write(JSON.parse(requ
 
 # sentry
 fpath=("/Users/shaarawi/.local/share/zsh/site-functions" $fpath)
+
+# 1Password service account for unattended op (Bloombilt vault, read-write)
+[ -f "$HOME/.config/op/sa.env" ] && source "$HOME/.config/op/sa.env"

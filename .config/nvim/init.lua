@@ -254,6 +254,9 @@ require('blink.cmp').setup({
 
 -- Mini
 require("mini.pairs").setup()
+require("mini.ai").setup()
+require("mini.surround").setup()
+require("mini.diff").setup()
 
 -- Theme
 require("vague").setup({

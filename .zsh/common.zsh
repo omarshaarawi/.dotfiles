@@ -41,8 +41,16 @@ stty -ixon
 setopt INTERACTIVE_COMMENTS
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=1000000
+SAVEHIST=1000000
 
 bindkey -e
 bindkey "^[[1;5C" forward-word
@@ -82,7 +90,11 @@ bindkey "^@" fzf-file-widget
 [[ -f "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
     source "$XDG_CONFIG_HOME/zsh-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# Hindsight shell history
+# fzf shell integration (widgets + **<TAB> completion). Sourced before hindsight
+# so hindsight can reclaim ^R. ^T (file) and alt+c (cd) stay on fzf.
+command -v fzf >/dev/null && eval "$(fzf --zsh)"
+
+# Hindsight shell history (rebinds ^R to its own widget, by design)
 [[ -f "$HOME/git/hindsight/shell/hindsight.zsh" ]] && \
     source "$HOME/git/hindsight/shell/hindsight.zsh"
 

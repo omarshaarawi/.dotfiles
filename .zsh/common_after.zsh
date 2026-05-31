@@ -7,6 +7,7 @@ sdk() {
     sdk "$@"
 }
 
+command -v mise >/dev/null && eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
 

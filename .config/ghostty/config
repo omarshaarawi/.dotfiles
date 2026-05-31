@@ -1,4 +1,3 @@
-.auto-update-channel = tip
 font-family = "Berkeley Mono"
 font-family-bold = "Berkeley Mono"
 font-family-italic = "Berkeley Mono"
@@ -7,7 +6,6 @@ font-feature = "-calt,-dlig,-liga"
 font-size = 16
 font-synthetic-style = bold,italic,bold-italic
 alpha-blending = native
-keybind = super+shift+a=agent:toggle
 
 cursor-style = block
 cursor-color = #ffffff
@@ -40,7 +38,7 @@ background-opacity = 0.9
 background-blur = 20
 
 shell-integration = zsh
-shell-integration-features = sudo,title,no-cursor
+shell-integration-features = sudo,title,no-cursor,ssh-env,ssh-terminfo
 
 macos-option-as-alt = true
 macos-titlebar-style = tabs
@@ -66,6 +64,14 @@ quit-after-last-window-closed = true
 confirm-close-surface = false
 
 keybind = shift+enter=text:\n
+
+# Quick (dropdown) terminal — global hotkey, drops over any app for a fast command.
+# Needs Accessibility permission the first time (Ghostty will prompt). Change the
+# binding if ctrl+` clashes; works alongside Hyper+G (full Ghostty window via Raycast).
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-screen = mouse
+quick-terminal-animation-duration = 0.15
 
 # Vim-mode scrollback (alt+v to enter, esc/q/i to exit)
 keybind = alt+v=activate_key_table:vim
