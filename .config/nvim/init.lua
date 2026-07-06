@@ -69,12 +69,9 @@ vim.pack.add({
 -- Highlighting/indent now uses Neovim's built-in treesitter support
 local ts_langs = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline", "elixir", "heex", "svelte", "html", "yaml" }
 
--- Auto-install parsers (async, won't block startup)
-vim.api.nvim_create_autocmd("VimEnter", {
-    once = true,
-    callback = function()
-        require('nvim-treesitter').install(ts_langs)
-    end,
+require('nvim-treesitter.configs').setup({
+    ensure_installed = ts_langs,
+    auto_install = true,
 })
 
 -- Enable treesitter highlighting and indent for all filetypes
@@ -252,6 +249,7 @@ require('blink.cmp').setup({
         nerd_font_variant = 'mono'
     },
     signature = { enabled = true },
+    fuzzy = { implementation = "prefer_rust" },
 })
 
 -- Mini
