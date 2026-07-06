@@ -12,6 +12,19 @@ config_dirs := "aerospace ghostty nvim starship tmux zellij zsh-plugins"
 # .config files to symlink (file-level, not directory-level)
 config_files := "jj/config.toml"
 
+# ~/.claude files to symlink (global Claude Code config)
+claude_files := "CLAUDE.md"
+
+# ~/.claude/skills subdirectories to symlink (personal, hand-authored skills;
+# marketplace skills stay symlinked into ~/.agents/skills and are not managed here).
+# Gated on ~/.is_work_machine (set by `just set-work`), same signal as the zsh split:
+#   claude_skills          - linked on every machine
+#   claude_skills_personal - linked only on personal machines (skipped on work)
+#   claude_skills_work     - linked only on work machines
+claude_skills := ""
+claude_skills_personal := "android-cli design gameplan jj-vcs loom-extract make-responsive portless raycast-settings use-railway workos workos-widgets x"
+claude_skills_work := ""
+
 # show available recipes
 default:
     @just --list
@@ -57,6 +70,36 @@ link:
         ln -sfn "{{dotfiles}}/.config/$f" "$target"
         echo "  .config/$f -> {{dotfiles}}/.config/$f"
     done
+    mkdir -p "$HOME/.claude/skills"
+    for f in {{claude_files}}; do
+        src="{{dotfiles}}/.claude/$f"
+        target="$HOME/.claude/$f"
+        [ -e "$src" ] || { echo "  SKIP .claude/$f (not vendored in dotfiles)"; continue; }
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP .claude/$f (real file exists, remove it to adopt the dotfiles copy)"
+            continue
+        fi
+        mkdir -p "$(dirname "$target")"
+        ln -sfn "$src" "$target"
+        echo "  .claude/$f -> $src"
+    done
+    skills="{{claude_skills}}"
+    if [ -f "$HOME/.is_work_machine" ]; then
+        skills="$skills {{claude_skills_work}}"
+    else
+        skills="$skills {{claude_skills_personal}}"
+    fi
+    for d in $skills; do
+        src="{{dotfiles}}/.claude/skills/$d"
+        target="$HOME/.claude/skills/$d"
+        [ -e "$src" ] || { echo "  SKIP .claude/skills/$d (not vendored in dotfiles)"; continue; }
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP .claude/skills/$d (real dir exists, remove it to adopt the dotfiles copy)"
+            continue
+        fi
+        ln -sfn "$src" "$target"
+        echo "  .claude/skills/$d -> $src"
+    done
     echo "done."
 
 # remove all managed symlinks
@@ -74,6 +117,12 @@ unlink:
     done
     for f in {{config_files}}; do
         [ -L "$HOME/.config/$f" ] && rm "$HOME/.config/$f" && echo "  removed ~/.config/$f"
+    done
+    for f in {{claude_files}}; do
+        [ -L "$HOME/.claude/$f" ] && rm "$HOME/.claude/$f" && echo "  removed ~/.claude/$f"
+    done
+    for d in {{claude_skills}} {{claude_skills_personal}} {{claude_skills_work}}; do
+        [ -L "$HOME/.claude/skills/$d" ] && rm "$HOME/.claude/skills/$d" && echo "  removed ~/.claude/skills/$d"
     done
     echo "done."
 
@@ -114,6 +163,30 @@ check:
             ((ok++))
         else
             echo "  MISSING  ~/.config/$f"
+            ((bad++))
+        fi
+    done
+    for f in {{claude_files}}; do
+        if [ -L "$HOME/.claude/$f" ]; then
+            echo "  ok  ~/.claude/$f"
+            ((ok++))
+        else
+            echo "  MISSING  ~/.claude/$f"
+            ((bad++))
+        fi
+    done
+    skills="{{claude_skills}}"
+    if [ -f "$HOME/.is_work_machine" ]; then
+        skills="$skills {{claude_skills_work}}"
+    else
+        skills="$skills {{claude_skills_personal}}"
+    fi
+    for d in $skills; do
+        if [ -L "$HOME/.claude/skills/$d" ]; then
+            echo "  ok  ~/.claude/skills/$d"
+            ((ok++))
+        else
+            echo "  MISSING  ~/.claude/skills/$d"
             ((bad++))
         fi
     done

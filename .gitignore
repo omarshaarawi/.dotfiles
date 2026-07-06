@@ -4,3 +4,11 @@ lazy-lock.json
 .zsh/work.zsh
 .config/nvim/nvim-macos-arm64/
 tmp/
+
+# The global ~/.gitignore ignores .claude/ (Claude Code per-project state).
+# Re-include only the global config we version here; keep machine-local and
+# transient bits (settings.local.json, worktrees/, sessions, etc.) ignored.
+!.claude/
+.claude/*
+!.claude/CLAUDE.md
+!.claude/skills/
