@@ -28,7 +28,7 @@ claude_skills_work := ""
 # work skills stored ENCRYPTED (age) in the public repo, decrypted only on a machine
 # holding the private key. one tar+age blob per skill at .claude/skills-work/<name>.tgz.age.
 # plaintext lives at ~/.claude/skills/<name> (the edit target) and is never committed.
-claude_skills_work_encrypted := "gameplan pactima-playwright zoom-hub"
+claude_skills_work_encrypted := "gameplan pactima-playwright zoom-hub aws-bento snapdocs-pr"
 
 # age identity (private, work machine only) + recipients file (public, committed)
 age_key := env("HOME") / ".config/age/dotfiles-work.txt"
@@ -231,12 +231,14 @@ check:
     echo "$ok ok, $bad missing"
     [ "$bad" -eq 0 ]
 
-# re-encrypt work skills from ~/.claude/skills into committed age blobs (run after editing one)
-encrypt-work:
+# re-encrypt work skills into committed age blobs. `just encrypt-work` re-encrypts all;
+# `just encrypt-work <name>` does just one (avoids churning the others, since age is non-deterministic).
+encrypt-work name="":
     #!/usr/bin/env bash
     set -euo pipefail
     mkdir -p "{{dotfiles}}/.claude/skills-work"
-    for name in {{claude_skills_work_encrypted}}; do
+    names="{{name}}"; [ -n "$names" ] || names="{{claude_skills_work_encrypted}}"
+    for name in $names; do
         src="$HOME/.claude/skills/$name"
         if [ ! -d "$src" ]; then
             echo "  SKIP $name (no plaintext at $src)"
