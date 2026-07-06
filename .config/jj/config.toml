@@ -19,7 +19,7 @@ push-bookmark-prefix = "push-"
 auto-update-stale = true
 
 [revsets]
-log = 'stack(mine() | @) | trunk() | @'
+log = 'mutable() & (stack(mine() | @)) | trunk() | @'
 
 [revset-aliases]
 # stack: mutable commits reachable from x, with n ancestor levels
@@ -29,6 +29,12 @@ log = 'stack(mine() | @) | trunk() | @'
 
 # all open work: stacks reachable from @ or anything you wrote
 'open()' = 'stack(mine() | @, 1)'
+
+# trunk follows the REMOTE bookmark, not a local one, so retrunk/reheat/nt
+# always target the real upstream tip after a fetch. a drifting or divergent
+# local development/main can no longer poison a rebase. auto-detects the
+# remote trunk name across repos, so per-repo trunk() overrides aren't needed.
+'trunk()' = 'latest((present(main) | present(master) | present(development) | present(trunk)) & remote_bookmarks())'
 
 [aliases]
 # start new work on trunk
@@ -89,6 +95,9 @@ firefights = ["util", "exec", "--", "sh", "-c", """
 jj log --no-graph \
   -r 'ancestors(trunk()) & committer_date(after:"1 year ago") & description(regex:"(?i)revert|hotfix|emergency|rollback")'
 """]
+
+# list local bookmarks that are already in trunk (safe to delete)
+merged = ["bookmark", "list", "-r", "::trunk() & bookmarks()"]
 
 [template-aliases]
 'format_short_id(id)' = 'id.shortest()'

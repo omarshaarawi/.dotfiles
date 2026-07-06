@@ -8,6 +8,10 @@
 - Clean up dead code ruthlessly. Dead helpers, unused parameters, stale imports: delete them.
 - If code is confusing, simplify it. Add an ASCII art diagram in a comment if it would help.
 - **Don't inherit rot**. Match the surrounding code's style, but if a neighboring pattern is actually wrong, fix it or flag it. Agents copy whatever is already there, including the outdated stuff, so bad patterns propagate silently.
+- Leave each repo better than you found it. If something smells, fix it.
+- When taking on new work: think about architecture, research docs, review the existing codebase, compare, then implement or ask about tradeoffs.
+- **AST-first where it helps**. Prefer `ast-grep` for tree-safe edits when it beats regex.
+- Do not overly comment code. If its obvious, leave it out. If it's not, add a comment. Comments are for the reader, not the author.
 
 ## Design & Data Modeling
 
@@ -62,6 +66,7 @@ How to apply:
 - No mocks. Unit tests or e2e tests, nothing in between.
 - Test everything. Tests must be rigorous enough that a new contributor cannot silently break things.
 - Run only the tests you added or modified unless asked otherwise.
+- Test files live alongside the code they test (same package, `_test.go` suffix). Use table-driven tests where they make the code clearer.
 
 ## Language Guidance
 
@@ -97,3 +102,11 @@ How to apply:
 - Skip em dashes. Use commas, parentheses, or periods.
 - Cursing in code comments is allowed. Jokes in comments are fine if used sparingly.
 - If I sound angry, it's at the code, not at you.
+
+## Final Handoff
+
+Before finishing a task:
+
+1. Confirm all touched tests or commands were run and passed.
+1. Summarize changes with file and line references.
+1. Call out any TODOs, follow-up work, or uncertainties.
