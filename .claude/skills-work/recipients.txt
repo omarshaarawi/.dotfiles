@@ -1,0 +1,3 @@
+# age recipients allowed to decrypt work skills. Public keys only, safe to commit.
+# Private identity lives on the work machine at ~/.config/age/dotfiles-work.txt (back it up in 1Password).
+age1e4m7matzlsastd6g0h84cjhqv0q39ltfdpptysq0qxddnqjp2aps4u2emw

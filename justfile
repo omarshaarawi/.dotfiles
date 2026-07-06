@@ -22,8 +22,17 @@ claude_files := "CLAUDE.md"
 #   claude_skills_personal - linked only on personal machines (skipped on work)
 #   claude_skills_work     - linked only on work machines
 claude_skills := ""
-claude_skills_personal := "android-cli design gameplan jj-vcs loom-extract make-responsive portless raycast-settings use-railway workos workos-widgets x"
+claude_skills_personal := "android-cli design jj-vcs loom-extract make-responsive portless raycast-settings use-railway workos workos-widgets x"
 claude_skills_work := ""
+
+# work skills stored ENCRYPTED (age) in the public repo, decrypted only on a machine
+# holding the private key. one tar+age blob per skill at .claude/skills-work/<name>.tgz.age.
+# plaintext lives at ~/.claude/skills/<name> (the edit target) and is never committed.
+claude_skills_work_encrypted := "gameplan pactima-playwright zoom-hub"
+
+# age identity (private, work machine only) + recipients file (public, committed)
+age_key := env("HOME") / ".config/age/dotfiles-work.txt"
+age_recipients := dotfiles / ".claude/skills-work/recipients.txt"
 
 # show available recipes
 default:
@@ -100,6 +109,23 @@ link:
         ln -sfn "$src" "$target"
         echo "  .claude/skills/$d -> $src"
     done
+    if [ -f "$HOME/.is_work_machine" ]; then
+        for name in {{claude_skills_work_encrypted}}; do
+            target="$HOME/.claude/skills/$name"
+            blob="{{dotfiles}}/.claude/skills-work/$name.tgz.age"
+            [ -f "$blob" ] || { echo "  SKIP .claude/skills/$name (no encrypted blob)"; continue; }
+            if [ -e "$target" ]; then
+                echo "  .claude/skills/$name (present; 'just decrypt-work' to refresh from repo)"
+                continue
+            fi
+            if [ ! -f "{{age_key}}" ]; then
+                echo "  SKIP .claude/skills/$name (encrypted; no age key at {{age_key}})"
+                continue
+            fi
+            age -d -i "{{age_key}}" "$blob" | tar xzf - -C "$HOME/.claude/skills"
+            echo "  .claude/skills/$name (decrypted from repo)"
+        done
+    fi
     echo "done."
 
 # remove all managed symlinks
@@ -190,9 +216,56 @@ check:
             ((bad++))
         fi
     done
+    if [ -f "$HOME/.is_work_machine" ]; then
+        for name in {{claude_skills_work_encrypted}}; do
+            if [ -d "$HOME/.claude/skills/$name" ]; then
+                echo "  ok  ~/.claude/skills/$name (decrypted)"
+                ((ok++))
+            else
+                echo "  MISSING  ~/.claude/skills/$name (run 'just decrypt-work')"
+                ((bad++))
+            fi
+        done
+    fi
     echo ""
     echo "$ok ok, $bad missing"
     [ "$bad" -eq 0 ]
+
+# re-encrypt work skills from ~/.claude/skills into committed age blobs (run after editing one)
+encrypt-work:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p "{{dotfiles}}/.claude/skills-work"
+    for name in {{claude_skills_work_encrypted}}; do
+        src="$HOME/.claude/skills/$name"
+        if [ ! -d "$src" ]; then
+            echo "  SKIP $name (no plaintext at $src)"
+            continue
+        fi
+        out="{{dotfiles}}/.claude/skills-work/$name.tgz.age"
+        tar czf - -C "$HOME/.claude/skills" "$name" | age -R "{{age_recipients}}" -o "$out"
+        echo "  encrypted $name -> .claude/skills-work/$name.tgz.age"
+    done
+    echo "done. commit the .tgz.age blobs."
+
+# decrypt work skills from committed age blobs into ~/.claude/skills (needs the private key)
+decrypt-work:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ ! -f "{{age_key}}" ]; then
+        echo "  no age key at {{age_key}} — cannot decrypt work skills."
+        echo "  restore it from 1Password onto this machine, then re-run."
+        exit 1
+    fi
+    mkdir -p "$HOME/.claude/skills"
+    for name in {{claude_skills_work_encrypted}}; do
+        blob="{{dotfiles}}/.claude/skills-work/$name.tgz.age"
+        [ -f "$blob" ] || { echo "  SKIP $name (no blob at $blob)"; continue; }
+        rm -rf "$HOME/.claude/skills/$name"
+        age -d -i "{{age_key}}" "$blob" | tar xzf - -C "$HOME/.claude/skills"
+        echo "  decrypted $name -> ~/.claude/skills/$name"
+    done
+    echo "done."
 
 # mark this as a work machine (sources .zsh/work.zsh instead of personal.zsh)
 set-work:

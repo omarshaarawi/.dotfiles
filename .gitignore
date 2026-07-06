@@ -12,3 +12,9 @@ tmp/
 .claude/*
 !.claude/CLAUDE.md
 !.claude/skills/
+!.claude/skills-work/
+
+# work skills live ONLY as encrypted blobs in .claude/skills-work/; never commit plaintext
+.claude/skills/gameplan/
+.claude/skills/pactima-playwright/
+.claude/skills/zoom-hub/
