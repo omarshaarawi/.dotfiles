@@ -190,16 +190,6 @@ How to apply:
 - We use `uv` and `pyproject.toml`. No `pip` venvs, Poetry, or `requirements.txt` unless asked.
 - Type hints everywhere. Explicit models, not loose dicts or strings.
 
-### KCL
-
-- Assume you have access to the Zoo MCP server. If you don't, tell me.
-- Use the multi-view snapshot tool to verify the model looks right.
-- Do not use the text-to-cad tool. Write code yourself.
-- Write math into the model, don't use external tools to compute and inject raw values.
-- Write parametric models that won't break when a parameter changes.
-- Don't trust other KCL files on the host system. Look up KCL docs via web search instead.
-- Build models incrementally: base shape, snapshot, verify, add feature, snapshot, verify.
-
 ## Dependencies
 
 - Before adding a dependency, web search for the most maintained, widely-used option. Confirm with me
