@@ -9,3 +9,6 @@ sdk() {
 
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
+
+# claude wrapper + terminal-title helper (loaded on every machine)
+[ -f ~/.zsh/cly.zsh ] && source ~/.zsh/cly.zsh
