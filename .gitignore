@@ -12,6 +12,8 @@ tmp/
 !.claude/CLAUDE.md
 !.claude/skills/
 !.claude/skills-work/
+!.claude/commands/
+!.claude/settings.json
 
 # work skills live ONLY as encrypted blobs in .claude/skills-work/; never commit plaintext
 .claude/skills/gameplan/

@@ -13,7 +13,7 @@ config_dirs := "aerospace ghostty nvim starship tmux zellij zsh-plugins"
 config_files := "jj/config.toml"
 
 # ~/.claude files to symlink (global Claude Code config)
-claude_files := "CLAUDE.md"
+claude_files := "CLAUDE.md commands/rmslop.md commands/learn.md"
 
 # ~/.claude/skills subdirectories to symlink (personal, hand-authored skills;
 # marketplace skills stay symlinked into ~/.agents/skills and are not managed here).
@@ -21,7 +21,7 @@ claude_files := "CLAUDE.md"
 #   claude_skills          - linked on every machine
 #   claude_skills_personal - linked only on personal machines (skipped on work)
 #   claude_skills_work     - linked only on work machines
-claude_skills := ""
+claude_skills := "prompting-primitives"
 claude_skills_personal := "android-cli design jj-vcs loom-extract make-responsive portless raycast-settings use-railway workos workos-widgets x"
 claude_skills_work := ""
 
