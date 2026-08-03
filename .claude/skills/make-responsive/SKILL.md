@@ -1,6 +1,6 @@
 ---
 name: make-responsive
-description: Adapt existing UI across mobile, tablet, and desktop breakpoints.
+description: "Use when existing UI needs to work at other screen sizes. Triggers: 'make this responsive', 'it's broken on mobile', 'fix the mobile layout', 'looks cramped on small screens', or reports of overflow, wrapping, clipping, or horizontal scroll on narrow viewports. Not for brand-new design work (use design)."
 ---
 
 # Make Responsive
