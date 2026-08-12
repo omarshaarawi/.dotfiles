@@ -12,6 +12,10 @@
       "rev": "1454f14",
       "src": "https://github.com/saghen/blink.compat"
     },
+    "codediff.nvim": {
+      "rev": "09d9ebe",
+      "src": "https://github.com/esmuellert/codediff.nvim"
+    },
     "diffview.nvim": {
       "rev": "4516612",
       "src": "https://github.com/sindrets/diffview.nvim"
@@ -39,6 +43,10 @@
     "mini.nvim": {
       "rev": "c163117",
       "src": "https://github.com/nvim-mini/mini.nvim.git"
+    },
+    "navi.nvim": {
+      "rev": "690195c",
+      "src": "https://github.com/kitlangton/navi.nvim"
     },
     "nui.nvim": {
       "rev": "de74099",

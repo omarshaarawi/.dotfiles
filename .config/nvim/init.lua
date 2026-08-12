@@ -33,6 +33,7 @@ vim.pack.add({
     -- Navigation & workflow
     "https://github.com/mbbill/undotree",
     "https://github.com/folke/trouble.nvim",
+    "https://github.com/kitlangton/navi.nvim",
 
     -- Theme
     "https://github.com/vague-theme/vague.nvim",
@@ -50,6 +51,7 @@ vim.pack.add({
 
     -- Diff & PR review
     "https://github.com/sindrets/diffview.nvim",
+    "https://github.com/esmuellert/codediff.nvim",
     "https://github.com/pwntester/octo.nvim",
     "https://github.com/nvim-tree/nvim-web-devicons",
 
@@ -64,20 +66,34 @@ vim.pack.add({
 
 -- Plugin Configurations
 
--- Treesitter (new API - nvim-treesitter main branch rewrite)
--- Install parsers with :TSInstall <lang> or programmatically below
--- Highlighting/indent now uses Neovim's built-in treesitter support
-local ts_langs = { "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown", "markdown_inline", "elixir", "heex", "svelte", "html", "yaml" }
+-- Treesitter (nvim-treesitter main branch rewrite)
+-- No `nvim-treesitter.configs` module anymore: no ensure_installed, no auto_install.
+-- `install()` is async and a no-op for parsers already present. Parsers land in
+-- stdpath('data')/site, which is already on the runtimepath.
+-- Highlighting comes from Neovim itself (:h treesitter-highlight).
+local ts = require('nvim-treesitter')
 
-require('nvim-treesitter.configs').setup({
-    ensure_installed = ts_langs,
-    auto_install = true,
-})
+ts.install({ "lua", "vim", "vimdoc", "go", "rust", "javascript", "typescript", "markdown",
+    "markdown_inline", "elixir", "heex", "svelte", "html", "yaml" })
 
--- Enable treesitter highlighting and indent for all filetypes
+-- Start highlighting on every filetype, installing the parser on demand if we
+-- don't have it yet (the old `auto_install = true`).
 vim.api.nvim_create_autocmd("FileType", {
-    callback = function()
-        pcall(vim.treesitter.start)
+    callback = function(ev)
+        if pcall(vim.treesitter.start, ev.buf) then
+            return
+        end
+
+        local lang = vim.treesitter.language.get_lang(ev.match)
+        if not lang or not vim.list_contains(ts.get_available(), lang) then
+            return
+        end
+
+        ts.install({ lang }):await(vim.schedule_wrap(function(err)
+            if not err and vim.api.nvim_buf_is_valid(ev.buf) then
+                pcall(vim.treesitter.start, ev.buf)
+            end
+        end))
     end,
 })
 
@@ -318,6 +334,9 @@ vim.keymap.set("v", "<leader>9v", function() _99.visual() end, { desc = "99: vis
 vim.keymap.set("n", "<leader>9x", function() _99.stop_all_requests() end, { desc = "99: stop all requests" })
 vim.keymap.set("n", "<leader>9s", function() _99.search() end, { desc = "99: search" })
 
+vim.opt.number = true
+vim.opt.relativenumber = true
+
 -- Diffview
 require("diffview").setup({
     use_icons = true,
@@ -326,6 +345,29 @@ vim.keymap.set("n", "<leader>dv", "<cmd>DiffviewOpen<CR>", { desc = "Diffview: o
 vim.keymap.set("n", "<leader>dc", "<cmd>DiffviewClose<CR>", { desc = "Diffview: close" })
 vim.keymap.set("n", "<leader>dh", "<cmd>DiffviewFileHistory %<CR>", { desc = "Diffview: file history" })
 vim.keymap.set("n", "<leader>db", "<cmd>DiffviewFileHistory<CR>", { desc = "Diffview: branch history" })
+
+-- CodeDiff: live review of agent changes. Keep repository mutations in jj.
+require("codediff").setup({
+    keymaps = {
+        view = {
+            toggle_stage = false,
+            stage_hunk = false,
+            unstage_hunk = false,
+            discard_hunk = false,
+        },
+        explorer = {
+            stage_all = false,
+            unstage_all = false,
+            restore = false,
+        },
+    },
+})
+vim.keymap.set("n", "<leader>dd", "<cmd>CodeDiff<CR>", { desc = "CodeDiff: review changes" })
+
+-- Guided source tours
+vim.keymap.set("n", "<leader>nn", "<cmd>NaviNext<CR>", { desc = "Navi: next stop" })
+vim.keymap.set("n", "<leader>np", "<cmd>NaviPrev<CR>", { desc = "Navi: previous stop" })
+vim.keymap.set("n", "<leader>nc", "<cmd>NaviClear<CR>", { desc = "Navi: clear tour" })
 
 -- Octo (GitHub PR review)
 require("octo").setup({

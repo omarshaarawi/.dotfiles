@@ -1,0 +1,22 @@
+[
+  {
+    "file": ".config/nvim/init.lua",
+    "pattern": "require(\"config.settings\")",
+    "message": "## Start here\nThe config loads options, keymaps, autocommands, and LSP setup before plugins."
+  },
+  {
+    "file": ".config/nvim/init.lua",
+    "pattern": "vim.pack.add({",
+    "message": "## Plugins\nNeovim's built-in package manager installs and loads the plugins listed here. Navi is one of them."
+  },
+  {
+    "file": ".config/nvim/init.lua",
+    "pattern": "_99.setup({",
+    "message": "## AI in the editor\n99 uses an AI CLI for codebase search and visual selection replacement. Press Space 9 s to try its search."
+  },
+  {
+    "file": ".config/nvim/init.lua",
+    "pattern": "require(\"codediff\").setup({",
+    "message": "## Agent review\nCodeDiff shows file changes while an agent works. Press Space d d to open the review view."
+  }
+]

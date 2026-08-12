@@ -93,6 +93,46 @@ Shell pipelines wrapped via `jj util exec` so they work as jj aliases:
 | `jj velocity`   | Commits per month on trunk (accelerating or dying)           |
 | `jj firefights` | Revert/hotfix/rollback commits in the last year              |
 
+## Workspaces
+
+`jj workspace add` gives you a second checkout of the same repo. Nothing in jj
+retires one, so they pile up -- 50 across two repos here before this existed.
+
+```bash
+jj sprout <name>     # new workspace at ../<repo>-<name>, deps installed
+jj reap              # show which workspaces are finished (dry run)
+jj reap --apply      # forget them and remove the directories
+```
+
+`reap` only removes a workspace when everything it holds is one of:
+
+- **empty** -- nothing was ever written
+- **pushed** -- a remote bookmark points at it, so origin has it
+- **landed on trunk** -- already merged
+
+Anything else is a commit that exists only in that checkout, and reap keeps it and
+says so. The verdict names which case applied, so you can audit the call rather
+than trust it.
+
+### Why reaping matters beyond disk
+
+A workspace goes stale when its commit gets rewritten from elsewhere. With
+`snapshot.auto-update-stale = true` -- jj's default, and what this config used to
+set -- the next jj command in a stale workspace silently resets the working copy
+and **discards unsnapshotted edits**. No prompt, no recovery: the content never
+reached the object store. Verified 2026-09-07 by writing a file into a stale
+workspace and watching `jj st` delete it.
+
+This config now sets `auto-update-stale = false`, so a stale workspace fails loudly
+and you run `jj workspace update-stale` when you mean to. Reaping on landing is the
+other half: a workspace that gets retired when its work ships never goes stale.
+
+Deps stay per-workspace on purpose. Workspaces sit on different commits with
+different lockfiles, so a shared `node_modules` would hand you another branch's
+dependency tree. bun hardlinks from its global cache, so the real cost is a
+fraction of the apparent size (measured: ~77 GB apparent across 87 trees, 18 GB
+actually on disk).
+
 ## Personal repos (push to main)
 
 For dotfiles, side projects, anything where you own main.

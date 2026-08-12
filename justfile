@@ -10,7 +10,7 @@ home_dirs := ".zsh .scripts"
 config_dirs := "aerospace ghostty nvim starship tmux zellij zsh-plugins"
 
 # .config files to symlink (file-level, not directory-level)
-config_files := "jj/config.toml"
+config_files := "jj/config.toml jj/jj-ws.sh"
 
 # ~/.claude files to symlink (global Claude Code config)
 claude_files := "CLAUDE.md commands/rmslop.md commands/learn.md"

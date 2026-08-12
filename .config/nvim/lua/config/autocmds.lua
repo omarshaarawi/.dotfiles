@@ -19,10 +19,16 @@ autocmd('TextYankPost', {
 
 -- Trim trailing whitespace on save
 local trim_group = augroup('TrimWhitespace', { clear = true })
-autocmd({ "BufWritePre" }, {
+autocmd("BufWritePre", {
     group = trim_group,
     pattern = "*",
-    command = [[%s/\s\+$//e]],
+    callback = function(args)
+        if not vim.bo[args.buf].modifiable or vim.bo[args.buf].buftype ~= "" then
+            return
+        end
+
+        vim.cmd([[keeppatterns keepjumps %s/\s\+$//e]])
+    end,
     desc = "Remove trailing whitespace on save"
 })
 

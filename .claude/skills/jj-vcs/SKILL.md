@@ -333,6 +333,25 @@ investigating a codebase; not part of the day-to-day commit loop.
 
 ---
 
+## Workspaces
+
+```bash
+jj sprout <name>   # new workspace at ../<repo>-<name>, deps installed
+jj reap            # list finished workspaces (dry run)
+jj reap --apply    # forget + remove them
+```
+
+`reap` removes a workspace only when everything it holds is empty, pushed to a
+remote bookmark, or landed on trunk. Anything else is kept and the reason is
+printed. Prefer these over raw `jj workspace add` / `forget` so workspaces get
+retired instead of accumulating.
+
+⚠️ **Never set `snapshot.auto-update-stale = true`.** In a stale workspace it makes
+any jj command silently reset the working copy and discard unsnapshotted edits --
+verified 2026-09-07 by losing a file to `jj st`. This config pins it to `false`, so
+staleness errors instead. If you hit "working copy is stale", run
+`jj workspace update-stale` deliberately, after checking what is in the directory.
+
 ## Handling Conflicts
 
 jj allows you to commit conflicts and resolve them later — they don't block your workflow.
