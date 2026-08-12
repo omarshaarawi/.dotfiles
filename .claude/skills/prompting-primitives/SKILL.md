@@ -1,6 +1,14 @@
 ---
 name: prompting-primitives
-description: Design subsystems, APIs, config surfaces, and processes so AI agents can build on them without doing dumb shit ("primitives that enable prompting", dax/opencode v2). Use when designing or reviewing a new subsystem, plugin/extension API, config format, tool surface, keybinding/theme/registry system, event schema, or when writing specs/plans that agents will implement from. Trigger phrases: "make this agent-friendly", "primitive that enables prompting", "design this so an agent can extend it", "write a spec/plan for an agent", "why does the agent keep breaking this".
+description: >-
+  Design subsystems, APIs, config surfaces, and processes so AI agents can build on them without
+  doing dumb shit ("primitives that enable prompting", dax/opencode v2). Use when designing or
+  reviewing a new subsystem, plugin/extension API, config format, tool surface,
+  keybinding/theme/registry system, event schema, or when writing specs/plans that agents will
+  implement from. Trigger phrases: "make this agent-friendly", "primitive that enables
+  prompting", "design this so an agent can extend it", "write a spec/plan for an agent", "why
+  does the agent keep breaking this".
+
 ---
 
 # Prompting Primitives

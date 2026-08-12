@@ -1,6 +1,13 @@
 ---
 name: x
-description: Read tweets from X (Twitter) from any project — search by query or operator (from:, min_faves:, since:), pull a user's timeline, or fetch a tweet by id/URL. Two backends: TwitterAPI.io (clean JSON, tiny per-read cost) and a logged-in browser session via agent-browser (no key, no cost). Use when asked to "read tweets", "search X/Twitter", "what is <handle> tweeting", "get this tweet", "check X for <topic>", or when an x.com/twitter.com status URL appears. Read-only.
+description: >-
+  Read tweets from X (Twitter) from any project — search by query or operator (from:,
+  min_faves:, since:), pull a user's timeline, or fetch a tweet by id/URL. Two backends:
+  TwitterAPI.io (clean JSON, tiny per-read cost) and a logged-in browser session via
+  agent-browser (no key, no cost). Use when asked to "read tweets", "search X/Twitter", "what is
+  <handle> tweeting", "get this tweet", "check X for <topic>", or when an x.com/twitter.com
+  status URL appears. Read-only.
+
 ---
 
 # x
