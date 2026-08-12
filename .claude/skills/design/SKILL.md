@@ -1,6 +1,6 @@
 ---
 name: design
-description: Design and build new UI with the complete ui.sh design guideline system.
+description: "Use when the user asks to design or build new UI from scratch — a page, screen, section, component, layout, or landing page — or to make something look polished. Triggers: 'design a...', 'build a page for', 'add a section', 'make this look good', 'style this', 'the UI is ugly'. Not for making existing UI responsive (use make-responsive) or dark-mode-only changes."
 ---
 
 # Design

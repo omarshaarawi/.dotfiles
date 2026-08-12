@@ -52,9 +52,19 @@ loud about it and get a yes first. Silently routing around a rule is worse than 
 - **Don't fall in the instance trap.** I name an instance, I mean the class. This is my single most
   common correction, and it always arrives as "i mean...". One broken integration means every
   integration. One missing webhook form means a generic way to add webhooks. One ugly page means
-  the whole design pass. Before you fix the
-  example I gave, ask what the general version is and fix that. If the general fix means ripping it
-  out and starting over, that's fine, say so and do it.
+  the whole design pass. Before you fix the example I gave, ask what the general version is and fix
+  that. If the general fix means ripping it out and starting over, that's fine, say so and do it.
+  Receipt: across 2,908 sessions this is the largest correction bucket by 2.3x, and it does not
+  improve with a better model (3.4 per 100 turns on Opus 5, 2.7 on Fable 5, 2.1 on Opus 4.8).
+  Verbatim, so you can hear what it sounds like when it lands:
+
+  ```
+  "i mean i entered <url> as the url. that's it. this is the kind of stuff when it comes
+   to integrations that i mean. not just aws but in general"
+  "i mean i need a generic way for adding webhooks... espc on the ui..."
+  "i mean did you do the full redesign?"
+  "when i say desing, i mean the ui/ux"
+  ```
 - **Scope moves up, not down.** I don't want the minimal change, I want the right one, even if it's
   a refactor. If you picked an approach because it was quicker, you picked wrong. When I say "do
   what's best," that's a real delegation, not politeness: take the call and tell me what you took.
@@ -120,6 +130,17 @@ loud about it and get a yes first. Silently routing around a rule is worse than 
 - **Commit and PR style, always.** One commit per ticket. Single-line subject, imperative, no
   conventional-commit prefix (`fix chat`, not `fix(chat): ...`). Match the capitalization already in
   that repo's log. PR body is empty or one line. No "generated with" trailers, no co-author lines.
+  The title states the behavior that changed, not the machinery that changed it. From my own log:
+
+  ```
+  bad   feat(vault): add vault_resolve tool — agent reads any vault field by op:// ref
+  good  Deliver a reply's plain @Name as a real Discord mention
+  bad   TAG-455: SigV4 signing — AWS works properly from a hosted deploy
+  good  Stop the site selling a deployment we don't offer
+  ```
+
+  The `file-pr` and `babysit-pr` skills carry the full version. They trigger on "file a PR" and
+  "babysit" respectively, so you should not need to restate any of this to me.
 - **The diff should look like I wrote it.** Strip the comments you added to explain yourself. If a
   reviewer can tell which lines an agent wrote, rewrite those lines.
 
@@ -132,6 +153,16 @@ loud about it and get a yes first. Silently routing around a rule is worse than 
 - Read `.github/workflows` to understand how CI runs tests. It should behave the same locally.
 - For any file search or grep in the current git-indexed directory, use `fff` tools.
 - If a command hangs past 5 minutes, stop it and check with me.
+- **Never poll with `sleep`.** `sleep 90 && gh run view ...` is blocked by the harness, so the turn
+  is spent for nothing. Use `Monitor` with an until-loop, or one foreground command that exits when
+  the condition is met. Size the wait from how long the thing actually takes: opentag's CI is about
+  4m15s, so one check at four minutes beats eight checks at thirty seconds. Receipt: 84 blocked
+  sleep-polls in the history, 50 of them from a single model. It is the most common mechanical
+  failure in my logs and it is entirely self-inflicted.
+- **Confirm a path exists before you read it.** `cat`, `cd`, and `ls` on a guessed path is the second
+  most common failure (87 hits, 62 from one model): `apps/server/test/`, a `Button.svelte` that was
+  never there, a migration file whose name got invented. Glob or list the directory first. A guessed
+  path that happens to exist is worse than one that doesn't, because nothing tells you it was a guess.
 
 ## Picking the right models for workflows and subagents
 

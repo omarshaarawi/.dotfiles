@@ -21,7 +21,7 @@ claude_files := "CLAUDE.md commands/rmslop.md commands/learn.md"
 #   claude_skills          - linked on every machine
 #   claude_skills_personal - linked only on personal machines (skipped on work)
 #   claude_skills_work     - linked only on work machines
-claude_skills := "prompting-primitives"
+claude_skills := "prompting-primitives file-pr babysit-pr"
 claude_skills_personal := "android-cli design jj-vcs loom-extract make-responsive portless raycast-settings use-railway workos workos-widgets x"
 claude_skills_work := ""
 
@@ -211,6 +211,10 @@ check:
         if [ -L "$HOME/.claude/skills/$d" ]; then
             echo "  ok  ~/.claude/skills/$d"
             ((ok++))
+        elif [ -d "$HOME/.claude/skills/$d" ]; then
+            echo "  SHADOWED  ~/.claude/skills/$d (real dir, so the repo copy is dead weight;"
+            echo "            edits here do nothing. diff it, keep the good one, then re-run 'just link')"
+            ((bad++))
         else
             echo "  MISSING  ~/.claude/skills/$d"
             ((bad++))

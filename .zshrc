@@ -40,3 +40,6 @@ fpath=("/Users/shaarawi/.local/share/zsh/site-functions" $fpath)
 
 # 1Password service account for unattended op (Bloombilt vault, read-write)
 [ -f "$HOME/.config/op/sa.env" ] && source "$HOME/.config/op/sa.env"
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
