@@ -11,6 +11,8 @@ export EDITOR="nvim"
 export DEFAULT_USER="$(whoami)"
 export XDG_CONFIG_HOME="$HOME/.config"
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+# cmdline-tools follows XDG_CONFIG_HOME to ~/.config/.android, the emulator doesn't; pin both to the one with the AVDs
+export ANDROID_USER_HOME="$HOME/.android"
 # fzf parameters used in all widgets - configure layout and wrapped the preview results (useful in large command rendering)
 export FZF_DEFAULT_OPTS="--height 100% --layout reverse --preview-window=wrap"
 

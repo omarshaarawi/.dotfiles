@@ -244,3 +244,9 @@ Answer these before I have to ask them, because I always ask them:
 3. Is the whole list done, or just the part you did? Name what's left.
 4. What changed, with file and line references.
 5. What's still uncertain, deferred, or a landmine you left in place.
+
+## pstack
+
+The pstack plugin is installed globally. Use `pstack:poteto-mode` for multi-file work, public signature changes, architecture decisions, unknown-cause bugs, and performance work. It selects the appropriate playbook and supporting skills. Invoke a specific pstack skill directly when the request already names the workflow. Existing user and repository instructions take precedence, including jj, testing, model selection, communication permissions, and PR style. Installing pstack does not authorize unrelated external actions.
+
+@/Users/Shaarawi/.claude/pstack-models.md
