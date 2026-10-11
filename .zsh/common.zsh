@@ -172,4 +172,4 @@ nic() {
 }
 
 
-eval "$(zmx completions zsh)"
+command -v zmx >/dev/null && eval "$(zmx completions zsh)"
