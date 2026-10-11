@@ -2,6 +2,8 @@
     path = .gitconfig-personal
 [includeIf "gitdir:/Users/Z0044BF/"]
     path = .gitconfig-work
+[includeIf "gitdir:/home/shaarawi/"]
+    path = .gitconfig-personal
 [core]
 	editor = nvim
 	fsmonitor = true
@@ -73,7 +75,7 @@
 	fpush = push --force-with-lease
 [credential "https://github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !gh auth git-credential
