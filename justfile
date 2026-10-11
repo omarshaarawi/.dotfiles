@@ -13,7 +13,11 @@ config_dirs := "aerospace ghostty nvim starship tmux zellij zsh-plugins"
 config_files := "jj/config.toml jj/jj-ws.sh"
 
 # ~/.claude files to symlink (global Claude Code config)
-claude_files := "CLAUDE.md commands/rmslop.md commands/learn.md"
+claude_files := "CLAUDE.md settings.json statusline-command.sh pstack-models.md commands/rmslop.md commands/learn.md hooks/jj-worktree-create.sh hooks/jj-worktree-remove.sh"
+
+# ~/.codex files to symlink (global Codex config). config.toml and rules/ stay per-machine:
+# config.toml holds MCP credentials and machine paths, rules/ is Codex's auto-approval log.
+codex_files := "AGENTS.md pstack-models.md"
 
 # ~/.claude/skills subdirectories to symlink (personal, hand-authored skills;
 # marketplace skills stay symlinked into ~/.agents/skills and are not managed here).
@@ -92,6 +96,17 @@ link:
         ln -sfn "$src" "$target"
         echo "  .claude/$f -> $src"
     done
+    for f in {{codex_files}}; do
+        src="{{dotfiles}}/.codex/$f"
+        target="$HOME/.codex/$f"
+        if [ -e "$target" ] && [ ! -L "$target" ]; then
+            echo "  SKIP .codex/$f (real file exists, remove it to adopt the dotfiles copy)"
+            continue
+        fi
+        mkdir -p "$(dirname "$target")"
+        ln -sfn "$src" "$target"
+        echo "  .codex/$f -> $src"
+    done
     skills="{{claude_skills}}"
     if [ -f "$HOME/.is_work_machine" ]; then
         skills="$skills {{claude_skills_work}}"
@@ -147,6 +162,9 @@ unlink:
     for f in {{claude_files}}; do
         [ -L "$HOME/.claude/$f" ] && rm "$HOME/.claude/$f" && echo "  removed ~/.claude/$f"
     done
+    for f in {{codex_files}}; do
+        [ -L "$HOME/.codex/$f" ] && rm "$HOME/.codex/$f" && echo "  removed ~/.codex/$f"
+    done
     for d in {{claude_skills}} {{claude_skills_personal}} {{claude_skills_work}}; do
         [ -L "$HOME/.claude/skills/$d" ] && rm "$HOME/.claude/skills/$d" && echo "  removed ~/.claude/skills/$d"
     done
@@ -198,6 +216,15 @@ check:
             ((ok++))
         else
             echo "  MISSING  ~/.claude/$f"
+            ((bad++))
+        fi
+    done
+    for f in {{codex_files}}; do
+        if [ -L "$HOME/.codex/$f" ]; then
+            echo "  ok  ~/.codex/$f"
+            ((ok++))
+        else
+            echo "  MISSING  ~/.codex/$f"
             ((bad++))
         fi
     done

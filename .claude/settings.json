@@ -1,5 +1,129 @@
 {
-  "worktree": {
-    "bgIsolation": "none"
-  }
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_ENABLE_TODO_TOOLS": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "mcp__pencil"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "skillOverrides": {
+    "make-responsive": "off",
+    "web-design-guidelines": "off",
+    "workos-widgets": "off"
+  },
+  "hooks": {
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/jj-worktree-create.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/jj-worktree-remove.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": false,
+    "lua-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "interface-design@interface-design": true,
+    "figma@claude-plugins-official": true,
+    "modern-web-guidance@googlechrome": true,
+    "aws-core@claude-plugins-official": false,
+    "posthog@claude-plugins-official": true,
+    "workos@claude-plugins-official": true,
+    "paper-desktop@paper": true,
+    "typesafe@typesafe-ai": true,
+    "cc-plugin-you-should-know@builtin": true,
+    "pstack@pstack-claude": true,
+    "plugin-dev@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "minimalist-entrepreneur": {
+      "source": {
+        "source": "github",
+        "repo": "slavingia/skills"
+      }
+    },
+    "swiftui-expert-skill": {
+      "source": {
+        "source": "github",
+        "repo": "AvdLee/SwiftUI-Agent-Skill"
+      }
+    },
+    "blugins": {
+      "source": {
+        "source": "directory",
+        "path": "~/git/bloombilt/blugins"
+      }
+    },
+    "googlechrome": {
+      "source": {
+        "source": "github",
+        "repo": "GoogleChrome/modern-web-guidance"
+      }
+    },
+    "paper": {
+      "source": {
+        "source": "github",
+        "repo": "paper-design/agent-plugins"
+      }
+    },
+    "typesafe-ai": {
+      "source": {
+        "source": "github",
+        "repo": "typesafe-ai/skills"
+      }
+    },
+    "pstack-claude": {
+      "source": {
+        "source": "github",
+        "repo": "michael-denyer/pstack-claude"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "editorMode": "vim",
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
+  "mcpServers": {
+    "Mintlify": {
+      "url": "https://mcp.mintlify.com"
+    }
+  },
+  "theme": "dark"
 }
