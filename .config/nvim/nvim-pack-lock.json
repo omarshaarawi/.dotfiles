@@ -5,7 +5,7 @@
       "src": "https://github.com/ThePrimeagen/99"
     },
     "blink.cmp": {
-      "rev": "820f1dd",
+      "rev": "b19413d",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink.compat": {
@@ -53,7 +53,7 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-treesitter": {
-      "rev": "42fc28ba",
+      "rev": "ec034813",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-web-devicons": {
