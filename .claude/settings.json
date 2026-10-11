@@ -61,7 +61,13 @@
     "typesafe@typesafe-ai": true,
     "cc-plugin-you-should-know@builtin": true,
     "pstack@pstack-claude": true,
-    "plugin-dev@claude-plugins-official": true
+    "plugin-dev@claude-plugins-official": true,
+    "svelte@svelte": true,
+    "expo@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "swiftui-expert@swiftui-expert-skill": true
   },
   "extraKnownMarketplaces": {
     "minimalist-entrepreneur": {
@@ -105,6 +111,12 @@
         "source": "github",
         "repo": "michael-denyer/pstack-claude"
       }
+    },
+    "svelte": {
+      "source": {
+        "source": "github",
+        "repo": "sveltejs/ai-tools"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
@@ -115,6 +127,7 @@
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "editorMode": "vim",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
@@ -124,6 +137,5 @@
     "Mintlify": {
       "url": "https://mcp.mintlify.com"
     }
-  },
-  "theme": "dark"
+  }
 }
